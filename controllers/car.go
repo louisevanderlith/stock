@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/louisevanderlith/ads/core"
+	"github.com/louisevanderlith/stook/core"
 	"github.com/louisevanderlith/husk"
 	"github.com/louisevanderlith/mango/control"
 )

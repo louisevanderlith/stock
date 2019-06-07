@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/louisevanderlith/ads/controllers"
 	"github.com/louisevanderlith/mango"
+	"github.com/louisevanderlith/stock/controllers"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/plugins/cors"

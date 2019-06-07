@@ -5,8 +5,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/louisevanderlith/ads/core"
-	"github.com/louisevanderlith/ads/routers"
+	"github.com/louisevanderlith/stock/core"
+	"github.com/louisevanderlith/stock/routers"
 	"github.com/louisevanderlith/mango"
 	"github.com/louisevanderlith/mango/enums"
 

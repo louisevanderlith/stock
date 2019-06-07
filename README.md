@@ -1,2 +1,2 @@
-# stock
-Stock.API - Keeps track of every asset an Entity controls.
+# Stock
+Stock.API - Will enable an Entity to display their assets to the public.

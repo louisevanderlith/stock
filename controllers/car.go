@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/louisevanderlith/stook/core"
 	"github.com/louisevanderlith/husk"
 	"github.com/louisevanderlith/mango/control"
+	"github.com/louisevanderlith/stock/core"
 )
 
 type CarController struct {

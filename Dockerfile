@@ -18,9 +18,9 @@ RUN CGO_ENABLED="0" go build
 
 FROM scratch
 
-COPY --from=builder /box/ads .
+COPY --from=builder /box/stock .
 COPY conf conf
 
 EXPOSE 8101
 
-ENTRYPOINT [ "./ads" ]
+ENTRYPOINT [ "./stock" ]

@@ -5,7 +5,9 @@ import (
 )
 
 type context struct {
-	Cars husk.Tabler
+	Cars     husk.Tabler
+	Services husk.Tabler
+	Parts    husk.Tabler
 }
 
 var ctx context
@@ -13,10 +15,14 @@ var ctx context
 func CreateContext() {
 
 	ctx = context{
-		Cars: husk.NewTable(new(CarAdvert)),
+		Cars:     husk.NewTable(new(Car)),
+		Services: husk.NewTable(new(Service)),
+		Parts:    husk.NewTable(new(Part)),
 	}
 }
 
 func Shutdown() {
 	ctx.Cars.Save()
+	ctx.Services.Save()
+	ctx.Parts.Save()
 }

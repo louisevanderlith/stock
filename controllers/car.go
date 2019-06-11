@@ -30,7 +30,7 @@ func (req *CarController) GetByKey() {
 		return
 	}
 
-	rec, err := core.GetCarAdvert(key)
+	rec, err := core.GetCar(key)
 
 	if err != nil {
 		req.Serve(http.StatusNotFound, err, nil)
@@ -55,7 +55,7 @@ func (req *CarController) Get() {
 // @Failure 403 body is empty
 // @router / [post]
 func (req *CarController) Post() {
-	var obj core.CarAdvert
+	var obj core.Car
 	err := json.Unmarshal(req.Ctx.Input.RequestBody, &obj)
 
 	if err != nil {
@@ -75,7 +75,7 @@ func (req *CarController) Post() {
 // @Failure 403 body is empty
 // @router / [put]
 func (req *CarController) Put() {
-	body := &core.CarAdvert{}
+	body := &core.Car{}
 	key, err := req.GetKeyedRequest(body)
 
 	if err != nil {

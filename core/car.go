@@ -9,8 +9,8 @@ import (
 	"github.com/louisevanderlith/husk"
 )
 
-type CarAdvert struct {
-	Advert
+type Car struct {
+	StockItem
 	VehicleKey    husk.Key
 	Info          string `hsk:"size(128)"`
 	Year          int    `orm:"null"`
@@ -19,7 +19,7 @@ type CarAdvert struct {
 	LicenseExpiry time.Time
 }
 
-func (o CarAdvert) Valid() (bool, error) {
+func (o Car) Valid() (bool, error) {
 	var issues []string
 
 	valid, common := husk.ValidateStruct(&o)
@@ -32,7 +32,7 @@ func (o CarAdvert) Valid() (bool, error) {
 	}
 
 	if o.Mileage < 0 {
-		issues = append(issues, "Odometer can't be negative.")
+		issues = append(issues, "Mileage can't be negative.")
 	}
 
 	if o.HasNatis && o.LicenseExpiry.Before(time.Now()) {
@@ -45,25 +45,25 @@ func (o CarAdvert) Valid() (bool, error) {
 	return isValid, finErr
 }
 
-func GetCarAdvert(key husk.Key) (*CarAdvert, error) {
+func GetCar(key husk.Key) (*Car, error) {
 	rec, err := ctx.Cars.FindByKey(key)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return rec.Data().(*CarAdvert), nil
+	return rec.Data().(*Car), nil
 }
 
 func GetLatestCars(page, size int) husk.Collection {
 	return ctx.Cars.Find(page, size, husk.Everything())
 }
 
-func (c CarAdvert) Create() husk.CreateSet {
+func (c Car) Create() husk.CreateSet {
 	return ctx.Cars.Create(c)
 }
 
-func (c CarAdvert) Update(key husk.Key) error {
+func (c Car) Update(key husk.Key) error {
 	obj, err := ctx.Cars.FindByKey(key)
 
 	if err != nil {

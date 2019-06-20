@@ -70,7 +70,11 @@ func (c Car) Update(key husk.Key) error {
 		return err
 	}
 
-	obj.Set(c)
+	err = obj.Set(c)
+
+	if err != nil {
+		return nil
+	}
 
 	defer ctx.Cars.Save()
 	return ctx.Cars.Update(obj)

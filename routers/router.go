@@ -16,11 +16,21 @@ import (
 
 func Setup(s *mango.Service, host string) {
 	ctrlmap := EnableFilters(s, host)
-	carsCtrl := controllers.NewCarCtrl(ctrlmap)
 
+	carsCtrl := controllers.NewCarCtrl(ctrlmap)
 	//beego.Router("/v1/car", uplCtrl, "post:Post")
 	beego.Router("/v1/car/:key", carsCtrl, "get:GetByKey")
 	beego.Router("/v1/car/all/:pagesize", carsCtrl, "get:Get")
+
+	partsCtrl := controllers.NewPartCtrl(ctrlmap)
+	//beego.Router("/v1/car", uplCtrl, "post:Post")
+	beego.Router("/v1/part/:key", partsCtrl, "get:GetByKey")
+	beego.Router("/v1/part/all/:pagesize", partsCtrl, "get:Get")
+
+	servCtrl := controllers.NewServiceCtrl(ctrlmap)
+	//beego.Router("/v1/car", uplCtrl, "post:Post")
+	beego.Router("/v1/service/:key", servCtrl, "get:GetByKey")
+	beego.Router("/v1/service/all/:pagesize", servCtrl, "get:Get")
 }
 
 func EnableFilters(s *mango.Service, host string) *control.ControllerMap {

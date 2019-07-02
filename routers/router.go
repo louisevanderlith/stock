@@ -40,6 +40,8 @@ func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 	emptyMap["POST"] = roletype.Owner
 
 	ctrlmap.Add("/v1/car", emptyMap)
+	ctrlmap.Add("/v1/part", emptyMap)
+	ctrlmap.Add("/v1/service", emptyMap)
 
 	beego.InsertFilter("/v1/*", beego.BeforeRouter, ctrlmap.FilterAPI, false)
 	allowed := fmt.Sprintf("https://*%s", strings.TrimSuffix(host, "/"))

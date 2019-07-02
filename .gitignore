@@ -13,5 +13,5 @@
 
 stock
 
-db/
+db/*.husk
 !db/*.seed.json

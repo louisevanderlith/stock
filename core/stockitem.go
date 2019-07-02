@@ -9,7 +9,7 @@ import (
 type StockItem struct {
 	EntityKey husk.Key
 	Expires   time.Time
-	Price     float32
+	Price     int64 //Tokens can't be divided
 	Tags      []Tag
 	Location  string `hsk:"size(128)"`
 }

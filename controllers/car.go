@@ -1,28 +1,20 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"github.com/louisevanderlith/droxolite/xontrols"
 	"github.com/louisevanderlith/husk"
-	"github.com/louisevanderlith/mango/control"
 	"github.com/louisevanderlith/stock/core"
 )
 
 type CarController struct {
-	control.APIController
-}
-
-func NewCarCtrl(ctrlmap *control.ControllerMap) *CarController {
-	result := &CarController{}
-	result.SetInstanceMap(ctrlmap)
-
-	return result
+	xontrols.APICtrl
 }
 
 // /v1/car/:key
 func (req *CarController) GetByKey() {
-	k := req.Ctx.Input.Param(":key")
+	k := req.FindParam("key")
 	key, err := husk.ParseKey(k)
 
 	if err != nil {
@@ -56,7 +48,7 @@ func (req *CarController) Get() {
 // @router / [post]
 func (req *CarController) Post() {
 	var obj core.Car
-	err := json.Unmarshal(req.Ctx.Input.RequestBody, &obj)
+	err := req.Body(&obj)
 
 	if err != nil {
 		req.Serve(http.StatusBadRequest, err, nil)

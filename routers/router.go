@@ -1,38 +1,65 @@
 package routers
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/louisevanderlith/mango"
+	"github.com/louisevanderlith/droxolite"
 	"github.com/louisevanderlith/stock/controllers"
 
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/plugins/cors"
-	"github.com/louisevanderlith/mango/control"
-	secure "github.com/louisevanderlith/secure/core"
-	"github.com/louisevanderlith/secure/core/roletype"
+	"github.com/louisevanderlith/droxolite/roletype"
 )
 
-func Setup(s *mango.Service, host string) {
-	ctrlmap := EnableFilters(s, host)
+func Setup(poxy *droxolite.Epoxy) {
+	//Car
+	carCtrl := &controllers.CarController{}
+	carGroup := droxolite.NewRouteGroup("car", carCtrl)
+	carGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, carCtrl.GetByKey)
+	carGroup.AddRoute("/", "POST", roletype.Owner, carCtrl.Post)
+	carGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, carCtrl.Get)
+	poxy.AddGroup(carGroup)
 
-	carsCtrl := controllers.NewCarCtrl(ctrlmap)
-	//beego.Router("/v1/car", uplCtrl, "post:Post")
-	beego.Router("/v1/car/:key", carsCtrl, "get:GetByKey")
-	beego.Router("/v1/car/all/:pagesize", carsCtrl, "get:Get")
+	//Part
+	partCtrl := &controllers.PartController{}
+	partGroup := droxolite.NewRouteGroup("part", partCtrl)
+	partGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, partCtrl.GetByKey)
+	partGroup.AddRoute("/", "POST", roletype.Owner, partCtrl.Post)
+	partGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, partCtrl.Get)
+	poxy.AddGroup(partGroup)
 
-	partsCtrl := controllers.NewPartCtrl(ctrlmap)
-	//beego.Router("/v1/car", uplCtrl, "post:Post")
-	beego.Router("/v1/part/:key", partsCtrl, "get:GetByKey")
-	beego.Router("/v1/part/all/:pagesize", partsCtrl, "get:Get")
+	//Property
+	propCtrl := &controllers.PropertyController{}
+	propGroup := droxolite.NewRouteGroup("property", propCtrl)
+	//propGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, propCtrl.GetByKey)
+	//propGroup.AddRoute("/", "POST", roletype.Owner, propCtrl.Post)
+	//propGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, propCtrl.Get)
+	poxy.AddGroup(propGroup)
 
-	servCtrl := controllers.NewServiceCtrl(ctrlmap)
-	//beego.Router("/v1/car", uplCtrl, "post:Post")
-	beego.Router("/v1/service/:key", servCtrl, "get:GetByKey")
-	beego.Router("/v1/service/all/:pagesize", servCtrl, "get:Get")
+	//Service
+	srvCtrl := &controllers.ServiceController{}
+	srvGroup := droxolite.NewRouteGroup("service", srvCtrl)
+	srvGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, srvCtrl.GetByKey)
+	srvGroup.AddRoute("/", "POST", roletype.Owner, srvCtrl.Post)
+	srvGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, srvCtrl.Get)
+	poxy.AddGroup(srvGroup)
+
+	/*
+		ctrlmap := EnableFilters(s, host)
+
+		carsCtrl := controllers.NewCarCtrl(ctrlmap)
+		//beego.Router("/v1/car", uplCtrl, "post:Post")
+		beego.Router("/v1/car/:key", carsCtrl, "get:GetByKey")
+		beego.Router("/v1/car/all/:pagesize", carsCtrl, "get:Get")
+
+		partsCtrl := controllers.NewPartCtrl(ctrlmap)
+		//beego.Router("/v1/car", uplCtrl, "post:Post")
+		beego.Router("/v1/part/:key", partsCtrl, "get:GetByKey")
+		beego.Router("/v1/part/all/:pagesize", partsCtrl, "get:Get")
+
+		servCtrl := controllers.NewServiceCtrl(ctrlmap)
+		//beego.Router("/v1/car", uplCtrl, "post:Post")
+		beego.Router("/v1/service/:key", servCtrl, "get:GetByKey")
+		beego.Router("/v1/service/all/:pagesize", servCtrl, "get:Get")*/
 }
 
+/*
 func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 	ctrlmap := control.CreateControlMap(s)
 
@@ -53,3 +80,4 @@ func EnableFilters(s *mango.Service, host string) *control.ControllerMap {
 
 	return ctrlmap
 }
+*/

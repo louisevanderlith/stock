@@ -16,6 +16,7 @@ type Car struct {
 	Year          int    `orm:"null"`
 	Mileage       int    `orm:"null"`
 	HasNatis      bool   `hsk:"default(false)"`
+	EstValue      int64
 	LicenseExpiry time.Time
 }
 
@@ -37,6 +38,12 @@ func (o Car) Valid() (bool, error) {
 
 	if o.HasNatis && o.LicenseExpiry.Before(time.Now()) {
 		issues = append(issues, "License has already expired.")
+	}
+
+	//Price compare - Fair Price?
+	//Estimate Value should be populated with the Average price of similiar vehicles.
+	if err := PriceInBounds(o.Price, o.EstValue); err != nil {
+		return false, err
 	}
 
 	isValid := len(issues) < 1

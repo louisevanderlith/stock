@@ -10,18 +10,18 @@ import (
 func Setup(poxy *droxolite.Epoxy) {
 	//Car
 	carCtrl := &controllers.CarController{}
-	carGroup := droxolite.NewRouteGroup("car", carCtrl)
-	carGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, carCtrl.GetByKey)
-	carGroup.AddRoute("/", "POST", roletype.Owner, carCtrl.Post)
-	carGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, carCtrl.Get)
+	carGroup := droxolite.NewRouteGroup("Car", carCtrl)
+	carGroup.AddRoute("Car by Key", "/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, carCtrl.GetByKey)
+	carGroup.AddRoute("Create Car", "", "POST", roletype.Owner, carCtrl.Post)
+	carGroup.AddRoute("All Cars", "/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, carCtrl.Get)
 	poxy.AddGroup(carGroup)
 
 	//Part
 	partCtrl := &controllers.PartController{}
 	partGroup := droxolite.NewRouteGroup("part", partCtrl)
-	partGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, partCtrl.GetByKey)
-	partGroup.AddRoute("/", "POST", roletype.Owner, partCtrl.Post)
-	partGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, partCtrl.Get)
+	partGroup.AddRoute("Part by Key", "/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, partCtrl.GetByKey)
+	partGroup.AddRoute("Create Part", "", "POST", roletype.Owner, partCtrl.Post)
+	partGroup.AddRoute("All Parts", "/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, partCtrl.Get)
 	poxy.AddGroup(partGroup)
 
 	//Property
@@ -35,9 +35,9 @@ func Setup(poxy *droxolite.Epoxy) {
 	//Service
 	srvCtrl := &controllers.ServiceController{}
 	srvGroup := droxolite.NewRouteGroup("service", srvCtrl)
-	srvGroup.AddRoute("/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, srvCtrl.GetByKey)
-	srvGroup.AddRoute("/", "POST", roletype.Owner, srvCtrl.Post)
-	srvGroup.AddRoute("/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, srvCtrl.Get)
+	srvGroup.AddRoute("Service by Key", "/{key:[0-9]+\x60[0-9]+}", "GET", roletype.Unknown, srvCtrl.GetByKey)
+	srvGroup.AddRoute("Create Service", "", "POST", roletype.Owner, srvCtrl.Post)
+	srvGroup.AddRoute("All Services", "/all/{pagesize:[A-Z][0-9]+}", "GET", roletype.User, srvCtrl.Get)
 	poxy.AddGroup(srvGroup)
 
 	/*

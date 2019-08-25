@@ -3,41 +3,38 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/louisevanderlith/droxolite/xontrols"
+	"github.com/louisevanderlith/droxolite/context"
 	"github.com/louisevanderlith/husk"
 	"github.com/louisevanderlith/stock/core"
 )
 
-type CarController struct {
-	xontrols.APICtrl
+type Cars struct {
 }
 
 // /v1/car/:key
-func (req *CarController) GetByKey() {
-	k := req.FindParam("key")
+func (req *Cars) GetByKey(ctx context.Contexer) (int, interface{}) {
+	k := ctx.FindParam("key")
 	key, err := husk.ParseKey(k)
 
 	if err != nil {
-		req.Serve(http.StatusBadRequest, err, nil)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	rec, err := core.GetCar(key)
 
 	if err != nil {
-		req.Serve(http.StatusNotFound, err, nil)
-		return
+		return http.StatusNotFound, err
 	}
 
-	req.Serve(http.StatusOK, nil, rec)
+	return http.StatusOK, rec
 }
 
 // @router /all/:pagesize [get]
-func (req *CarController) Get() {
-	page, size := req.GetPageData()
+func (req *Cars) Get(ctx context.Contexer) (int, interface{}) {
+	page, size := ctx.GetPageData()
 	results := core.GetLatestCars(page, size)
 
-	req.Serve(http.StatusOK, nil, results)
+	return http.StatusOK, results
 }
 
 // @Title RegisterWebsite
@@ -46,18 +43,17 @@ func (req *CarController) Get() {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
-func (req *CarController) Post() {
+func (req *Cars) Post(ctx context.Contexer) (int, interface{}) {
 	var obj core.Car
-	err := req.Body(&obj)
+	err := ctx.Body(&obj)
 
 	if err != nil {
-		req.Serve(http.StatusBadRequest, err, nil)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	rec := obj.Create()
 
-	req.Serve(http.StatusOK, nil, rec)
+	return http.StatusOK, rec
 }
 
 // @Title Update Car advert
@@ -66,21 +62,19 @@ func (req *CarController) Post() {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [put]
-func (req *CarController) Put() {
+func (req *Cars) Put(ctx context.Contexer) (int, interface{}) {
 	body := &core.Car{}
-	key, err := req.GetKeyedRequest(body)
+	key, err := ctx.GetKeyedRequest(body)
 
 	if err != nil {
-		req.Serve(http.StatusBadRequest, err, nil)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	err = body.Update(key)
 
 	if err != nil {
-		req.Serve(http.StatusNotFound, err, nil)
-		return
+		return http.StatusNotFound, err
 	}
 
-	req.Serve(http.StatusOK, nil, nil)
+	return http.StatusOK, nil
 }

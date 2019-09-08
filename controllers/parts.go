@@ -11,8 +11,14 @@ import (
 type Parts struct {
 }
 
+func (req *Parts) Get(ctx context.Requester) (int, interface{}) {
+	results := core.GetLatestParts(1, 10)
+
+	return http.StatusOK, results
+}
+
 // /v1/part/:key
-func (req *Parts) GetByKey(ctx context.Contexer) (int, interface{}) {
+func (req *Parts) View(ctx context.Requester) (int, interface{}) {
 	k := ctx.FindParam("key")
 	key, err := husk.ParseKey(k)
 
@@ -30,7 +36,7 @@ func (req *Parts) GetByKey(ctx context.Contexer) (int, interface{}) {
 }
 
 // @router /all/:pagesize [get]
-func (req *Parts) Get(ctx context.Contexer) (int, interface{}) {
+func (req *Parts) Search(ctx context.Requester) (int, interface{}) {
 	page, size := ctx.GetPageData()
 	results := core.GetLatestParts(page, size)
 
@@ -43,7 +49,7 @@ func (req *Parts) Get(ctx context.Contexer) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
-func (req *Parts) Post(ctx context.Contexer) (int, interface{}) {
+func (req *Parts) Create(ctx context.Requester) (int, interface{}) {
 	var obj core.Part
 	err := ctx.Body(&obj)
 
@@ -62,7 +68,7 @@ func (req *Parts) Post(ctx context.Contexer) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [put]
-func (req *Parts) Put(ctx context.Contexer) (int, interface{}) {
+func (req *Parts) Update(ctx context.Requester) (int, interface{}) {
 	body := &core.Part{}
 	key, err := ctx.GetKeyedRequest(body)
 

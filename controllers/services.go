@@ -11,8 +11,14 @@ import (
 type Services struct {
 }
 
+func (req *Services) Get(ctx context.Requester) (int, interface{}) {
+	results := core.GetServices(1, 10)
+
+	return http.StatusOK, results
+}
+
 // /v1/service/:key
-func (req *Services) GetByKey(ctx context.Contexer) (int, interface{}) {
+func (req *Services) View(ctx context.Requester) (int, interface{}) {
 	k := ctx.FindParam("key")
 	key, err := husk.ParseKey(k)
 
@@ -20,7 +26,7 @@ func (req *Services) GetByKey(ctx context.Contexer) (int, interface{}) {
 		return http.StatusBadRequest, err
 	}
 
-	rec, err := core.GetCar(key)
+	rec, err := core.GetService(key)
 
 	if err != nil {
 		return http.StatusNotFound, err
@@ -30,7 +36,7 @@ func (req *Services) GetByKey(ctx context.Contexer) (int, interface{}) {
 }
 
 // @router /all/:pagesize [get]
-func (req *Services) Get(ctx context.Contexer) (int, interface{}) {
+func (req *Services) Search(ctx context.Requester) (int, interface{}) {
 	page, size := ctx.GetPageData()
 	results := core.GetServices(page, size)
 
@@ -43,7 +49,7 @@ func (req *Services) Get(ctx context.Contexer) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
-func (req *Services) Post(ctx context.Contexer) (int, interface{}) {
+func (req *Services) Create(ctx context.Requester) (int, interface{}) {
 	var obj core.Service
 	err := ctx.Body(&obj)
 
@@ -62,7 +68,7 @@ func (req *Services) Post(ctx context.Contexer) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [put]
-func (req *Services) Put(ctx context.Contexer) (int, interface{}) {
+func (req *Services) Update(ctx context.Requester) (int, interface{}) {
 	body := &core.Service{}
 	key, err := ctx.GetKeyedRequest(body)
 

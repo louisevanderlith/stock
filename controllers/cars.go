@@ -11,15 +11,15 @@ import (
 type Cars struct {
 }
 
-func (x *Cars) Get(ctx context.Requester) (int, interface{}) {
+func (x *Cars) Get(c *gin.Context) {
 	results := core.GetLatestCars(1, 10)
 
 	return http.StatusOK, results
 }
 
 // /v1/car/:key
-func (req *Cars) View(ctx context.Requester) (int, interface{}) {
-	k := ctx.FindParam("key")
+func (req *Cars) View(c *gin.Context) {
+	k := c.Param("key")
 	key, err := husk.ParseKey(k)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (req *Cars) View(ctx context.Requester) (int, interface{}) {
 }
 
 // @router /all/:pagesize [get]
-func (req *Cars) Search(ctx context.Requester) (int, interface{}) {
+func (req *Cars) Search(c *gin.Context) {
 	page, size := ctx.GetPageData()
 	results := core.GetLatestCars(page, size)
 
@@ -49,7 +49,7 @@ func (req *Cars) Search(ctx context.Requester) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [post]
-func (req *Cars) Create(ctx context.Requester) (int, interface{}) {
+func (req *Cars) Create(c *gin.Context) {
 	var obj core.Car
 	err := ctx.Body(&obj)
 
@@ -68,8 +68,8 @@ func (req *Cars) Create(ctx context.Requester) (int, interface{}) {
 // @Success 200 {map[string]string} map[string]string
 // @Failure 403 body is empty
 // @router / [put]
-func (req *Cars) Update(ctx context.Requester) (int, interface{}) {
-	key, err := husk.ParseKey(ctx.FindParam("key"))
+func (req *Cars) Update(c *gin.Context) {
+	key, err := husk.ParseKey(c.Param("key"))
 
 	if err != nil {
 		return http.StatusBadRequest, err

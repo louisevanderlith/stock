@@ -9,6 +9,6 @@ import (
 type Properties struct {
 }
 
-func (req *Properties) Get(ctx context.Requester) (int, interface{}) {
+func (req *Properties) Get(c *gin.Context) {
 	return http.StatusOK, nil
 }

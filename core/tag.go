@@ -8,6 +8,6 @@ type Tag struct {
 	Description string `hsk:"size(255)"`
 }
 
-func (o Tag) Valid() (bool, error) {
+func (o Tag) Valid() error {
 	return husk.ValidateStruct(&o)
 }

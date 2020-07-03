@@ -1,0 +1,9 @@
+name: mango_stock
+version: 1.0.1
+description: Wrapper for Mango Stock API
+repository: https://github.com/louisevanderlith/stock
+homepage: https://github.com/louisevanderlith/stock
+environment:
+  sdk: '>=2.0.0 < 3.0.0'
+dependencies:
+  mango_ui: '^1.0.3'

@@ -20,12 +20,12 @@ type Car struct {
 	LicenseExpiry time.Time
 }
 
-func (o Car) Valid() (bool, error) {
+func (o Car) Valid() error {
 	var issues []string
 
-	valid, common := husk.ValidateStruct(&o)
-	if !valid {
-		issues = append(issues, common.Error())
+	err := husk.ValidateStruct(&o)
+	if err != nil {
+		issues = append(issues, err.Error())
 	}
 
 	if o.Year > 0 && o.Year > time.Now().Year() {
@@ -43,26 +43,25 @@ func (o Car) Valid() (bool, error) {
 	//Price compare - Fair Price?
 	//Estimate Value should be populated with the Average price of similiar vehicles.
 	if err := PriceInBounds(o.Price, o.EstValue); err != nil {
-		return false, err
+		return err
 	}
 
-	isValid := len(issues) < 1
 	finErr := errors.New(strings.Join(issues, "\r\n"))
 
-	return isValid, finErr
+	return finErr
 }
 
-func GetCar(key husk.Key) (*Car, error) {
+func GetCar(key husk.Key) (Car, error) {
 	rec, err := ctx.Cars.FindByKey(key)
 
 	if err != nil {
-		return nil, err
+		return Car{}, err
 	}
 
-	return rec.Data().(*Car), nil
+	return rec.Data().(Car), nil
 }
 
-func GetLatestCars(page, size int) husk.Collection {
+func GetLatestCars(page, size int) (husk.Collection, error) {
 	return ctx.Cars.Find(page, size, husk.Everything())
 }
 

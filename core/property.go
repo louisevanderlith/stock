@@ -9,6 +9,6 @@ type Property struct {
 	Address string
 }
 
-func (p Property) Valid() (bool, error) {
+func (p Property) Valid() error {
 	return husk.ValidateStruct(&p)
 }

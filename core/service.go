@@ -4,23 +4,24 @@ import "github.com/louisevanderlith/husk"
 
 type Service struct {
 	StockItem
+	Url string
 }
 
-func (o Service) Valid() (bool, error) {
+func (o Service) Valid() error {
 	return husk.ValidateStruct(&o)
 }
 
-func GetService(key husk.Key) (*Service, error) {
+func GetService(key husk.Key) (Service, error) {
 	rec, err := ctx.Services.FindByKey(key)
 
 	if err != nil {
-		return nil, err
+		return Service{}, err
 	}
 
-	return rec.Data().(*Service), nil
+	return rec.Data().(Service), nil
 }
 
-func GetServices(page, size int) husk.Collection {
+func GetServices(page, size int) (husk.Collection, error) {
 	return ctx.Services.Find(page, size, husk.Everything())
 }
 

@@ -25,7 +25,7 @@ func GetServices(page, size int) (husk.Collection, error) {
 	return ctx.Services.Find(page, size, husk.Everything())
 }
 
-func (c Service) Create() husk.CreateSet {
+func (c Service) Create() (husk.Recorder, error) {
 	return ctx.Services.Create(c)
 }
 

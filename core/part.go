@@ -25,7 +25,7 @@ func GetLatestParts(page, size int) (husk.Collection, error) {
 	return ctx.Parts.Find(page, size, husk.Everything())
 }
 
-func (c Part) Create() husk.CreateSet {
+func (c Part) Create() (husk.Recorder, error) {
 	return ctx.Parts.Create(c)
 }
 

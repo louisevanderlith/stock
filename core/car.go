@@ -65,7 +65,7 @@ func GetLatestCars(page, size int) (husk.Collection, error) {
 	return ctx.Cars.Find(page, size, husk.Everything())
 }
 
-func (c Car) Create() husk.CreateSet {
+func (c Car) Create() (husk.Recorder, error) {
 	return ctx.Cars.Create(c)
 }
 

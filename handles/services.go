@@ -90,7 +90,13 @@ func CreateServices(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rec := obj.Create()
+	rec, err := obj.Create()
+
+	if err != nil {
+		log.Println("Create Error", err)
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
 
 	err = ctx.Serve(http.StatusOK, mix.JSON(rec))
 

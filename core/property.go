@@ -10,5 +10,5 @@ type Property struct {
 }
 
 func (p Property) Valid() error {
-	return husk.ValidateStruct(&p)
+	return husk.ValidateStruct(p)
 }

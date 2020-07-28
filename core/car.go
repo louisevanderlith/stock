@@ -23,7 +23,7 @@ type Car struct {
 func (o Car) Valid() error {
 	var issues []string
 
-	err := husk.ValidateStruct(&o)
+	err := husk.ValidateStruct(o)
 	if err != nil {
 		issues = append(issues, err.Error())
 	}

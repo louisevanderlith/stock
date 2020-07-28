@@ -8,7 +8,7 @@ type Part struct {
 }
 
 func (o Part) Valid() error {
-	return husk.ValidateStruct(&o)
+	return husk.ValidateStruct(o)
 }
 
 func GetPart(key husk.Key) (Part, error) {

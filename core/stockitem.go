@@ -7,10 +7,11 @@ import (
 )
 
 type StockItem struct {
-	ImageKey  husk.Key
-	EntityKey husk.Key
-	Expires   time.Time
-	Price     int64 //Tokens can't be divided
-	Tags      []Tag
-	Location  string `hsk:"size(128)"`
+	ImageKey     husk.Key
+	OwnerKey     husk.Key //Hero
+	Expires      time.Time
+	Price        int64 //Tokens can't be divided
+	Tags         []Tag
+	Location     string `hsk:"size(128)"`
+	OwnerHistory map[time.Time]husk.Key
 }

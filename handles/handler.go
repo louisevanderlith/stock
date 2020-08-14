@@ -7,45 +7,44 @@ import (
 	"net/http"
 )
 
-func SetupRoutes(scrt, secureUrl string) http.Handler {
+func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 	r := mux.NewRouter()
-
 	//cars
-	getC := kong.ResourceMiddleware("stock.cars.search", scrt, secureUrl, GetCars)
+	getC := kong.ResourceMiddleware(http.DefaultClient, "stock.cars.search", scrt, securityUrl, managerUrl, GetCars)
 	r.HandleFunc("/cars", getC).Methods(http.MethodGet)
 
-	viewC := kong.ResourceMiddleware("stock.cars.view", scrt, secureUrl, ViewCars)
+	viewC := kong.ResourceMiddleware(http.DefaultClient, "stock.cars.view", scrt, securityUrl, managerUrl, ViewCars)
 	r.HandleFunc("/cars/{key:[0-9]+\\x60[0-9]+}", viewC).Methods(http.MethodGet)
 
-	srchC := kong.ResourceMiddleware("stock.cars.search", scrt, secureUrl, SearchCars)
+	srchC := kong.ResourceMiddleware(http.DefaultClient, "stock.cars.search", scrt, securityUrl, managerUrl, SearchCars)
 	r.HandleFunc("/cars/{pagesize:[A-Z][0-9]+}", srchC).Methods(http.MethodGet)
 	r.HandleFunc("/cars/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchC).Methods(http.MethodGet)
 
-	createC := kong.ResourceMiddleware("stock.cars.create", scrt, secureUrl, CreateCars)
+	createC := kong.ResourceMiddleware(http.DefaultClient, "stock.cars.create", scrt, securityUrl, managerUrl, CreateCars)
 	r.HandleFunc("/cars", createC).Methods(http.MethodPost)
 
-	updateC := kong.ResourceMiddleware("stock.cars.update", scrt, secureUrl, UpdateCars)
+	updateC := kong.ResourceMiddleware(http.DefaultClient, "stock.cars.update", scrt, securityUrl, managerUrl, UpdateCars)
 	r.HandleFunc("/cars/{key:[0-9]+\\x60[0-9]+}", updateC).Methods(http.MethodPut)
 
 	//parts
-	getPa := kong.ResourceMiddleware("stock.parts.search", scrt, secureUrl, GetParts)
+	getPa := kong.ResourceMiddleware(http.DefaultClient, "stock.parts.search", scrt, securityUrl, managerUrl, GetParts)
 	r.HandleFunc("/parts", getPa).Methods(http.MethodGet)
 
-	viewPa := kong.ResourceMiddleware("stock.parts.view", scrt, secureUrl, ViewParts)
+	viewPa := kong.ResourceMiddleware(http.DefaultClient, "stock.parts.view", scrt, securityUrl, managerUrl, ViewParts)
 	r.HandleFunc("/parts/{key:[0-9]+\\x60[0-9]+}", viewPa).Methods(http.MethodGet)
 
-	srchPa := kong.ResourceMiddleware("stock.parts.search", scrt, secureUrl, SearchParts)
+	srchPa := kong.ResourceMiddleware(http.DefaultClient, "stock.parts.search", scrt, securityUrl, managerUrl, SearchParts)
 	r.HandleFunc("/parts/{pagesize:[A-Z][0-9]+}", srchPa).Methods(http.MethodGet)
 	r.HandleFunc("/parts/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchPa).Methods(http.MethodGet)
 
-	createPa := kong.ResourceMiddleware("stock.parts.create", scrt, secureUrl, CreateParts)
+	createPa := kong.ResourceMiddleware(http.DefaultClient, "stock.parts.create", scrt, securityUrl, managerUrl, CreateParts)
 	r.HandleFunc("/parts", createPa).Methods(http.MethodPost)
 
-	updatePa := kong.ResourceMiddleware("stock.parts.update", scrt, secureUrl, UpdateParts)
+	updatePa := kong.ResourceMiddleware(http.DefaultClient, "stock.parts.update", scrt, securityUrl, managerUrl, UpdateParts)
 	r.HandleFunc("/parts/{key:[0-9]+\\x60[0-9]+}", updatePa).Methods(http.MethodPut)
 
 	//properties
-	getP := kong.ResourceMiddleware("stock.properties.search", scrt, secureUrl, GetProperties)
+	getP := kong.ResourceMiddleware(http.DefaultClient, "stock.properties.search", scrt, securityUrl, managerUrl, GetProperties)
 	r.HandleFunc("/properties", getP).Methods(http.MethodGet)
 	/*
 		viewP := kong.ResourceMiddleware("stock.properties.view", scrt, secureUrl, ViewParts)
@@ -62,23 +61,23 @@ func SetupRoutes(scrt, secureUrl string) http.Handler {
 		r.HandleFunc("/properties/{key:[0-9]+\\x60[0-9]+}", updateP).Methods(http.MethodPut)
 	*/
 	//services
-	getS := kong.ResourceMiddleware("stock.services.search", scrt, secureUrl, GetServices)
+	getS := kong.ResourceMiddleware(http.DefaultClient, "stock.services.search", scrt, securityUrl, managerUrl, GetServices)
 	r.HandleFunc("/services", getS).Methods(http.MethodGet)
 
-	viewS := kong.ResourceMiddleware("stock.services.view", scrt, secureUrl, ViewServices)
+	viewS := kong.ResourceMiddleware(http.DefaultClient, "stock.services.view", scrt, securityUrl, managerUrl, ViewServices)
 	r.HandleFunc("/services/{key:[0-9]+\\x60[0-9]+}", viewS).Methods(http.MethodGet)
 
-	srchS := kong.ResourceMiddleware("stock.services.search", scrt, secureUrl, SearchServices)
+	srchS := kong.ResourceMiddleware(http.DefaultClient, "stock.services.search", scrt, securityUrl, managerUrl, SearchServices)
 	r.HandleFunc("/services/{pagesize:[A-Z][0-9]+}", srchS).Methods(http.MethodGet)
 	r.HandleFunc("/services/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchS).Methods(http.MethodGet)
 
-	createS := kong.ResourceMiddleware("stock.services.create", scrt, secureUrl, CreateServices)
+	createS := kong.ResourceMiddleware(http.DefaultClient, "stock.services.create", scrt, securityUrl, managerUrl, CreateServices)
 	r.HandleFunc("/services", createS).Methods(http.MethodPost)
 
-	updateS := kong.ResourceMiddleware("stock.services.update", scrt, secureUrl, UpdateServices)
+	updateS := kong.ResourceMiddleware(http.DefaultClient, "stock.services.update", scrt, securityUrl, managerUrl, UpdateServices)
 	r.HandleFunc("/services/{key:[0-9]+\\x60[0-9]+}", updateS).Methods(http.MethodPut)
 
-	lst, err := kong.Whitelist(http.DefaultClient, secureUrl, "stock.cars.search", scrt)
+	lst, err := kong.Whitelist(http.DefaultClient, securityUrl, "stock.cars.search", scrt)
 
 	if err != nil {
 		panic(err)

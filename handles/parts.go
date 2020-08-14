@@ -1,17 +1,16 @@
 package handles
 
 import (
+	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
 	"log"
 	"net/http"
 
-	"github.com/louisevanderlith/droxolite/context"
 	"github.com/louisevanderlith/husk"
 	"github.com/louisevanderlith/stock/core"
 )
 
 func GetParts(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
 	results, err := core.GetLatestParts(1, 10)
 
 	if err != nil {
@@ -20,7 +19,7 @@ func GetParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(results))
+	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
 		log.Println(err)
@@ -29,8 +28,7 @@ func GetParts(w http.ResponseWriter, r *http.Request) {
 
 // /v1/part/:key
 func ViewParts(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	k := ctx.FindParam("key")
+	k := drx.FindParam(r, "key")
 	key, err := husk.ParseKey(k)
 
 	if err != nil {
@@ -47,7 +45,7 @@ func ViewParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(rec))
+	err = mix.Write(w, mix.JSON(rec))
 
 	if err != nil {
 		log.Println(err)
@@ -56,8 +54,7 @@ func ViewParts(w http.ResponseWriter, r *http.Request) {
 
 // @router /all/:pagesize [get]
 func SearchParts(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	page, size := ctx.GetPageData()
+	page, size := drx.GetPageData(r)
 	results, err := core.GetLatestParts(page, size)
 
 	if err != nil {
@@ -66,7 +63,7 @@ func SearchParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(results))
+	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
 		log.Println(err)
@@ -80,9 +77,8 @@ func SearchParts(w http.ResponseWriter, r *http.Request) {
 // @Failure 403 body is empty
 // @router / [post]
 func CreateParts(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
 	var obj core.Part
-	err := ctx.Body(&obj)
+	err := drx.JSONBody(r, &obj)
 
 	if err != nil {
 		log.Println(err)
@@ -98,7 +94,7 @@ func CreateParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(rec))
+	err = mix.Write(w, mix.JSON(rec))
 
 	if err != nil {
 		log.Println("Serve Error", err)
@@ -112,8 +108,7 @@ func CreateParts(w http.ResponseWriter, r *http.Request) {
 // @Failure 403 body is empty
 // @router / [put]
 func UpdateParts(w http.ResponseWriter, r *http.Request) {
-	ctx := context.New(w, r)
-	key, err := husk.ParseKey(ctx.FindParam("key"))
+	key, err := husk.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println(err)
@@ -122,7 +117,7 @@ func UpdateParts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	body := &core.Part{}
-	err = ctx.Body(body)
+	err = drx.JSONBody(r, body)
 
 	if err != nil {
 		log.Println(err)
@@ -138,7 +133,7 @@ func UpdateParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ctx.Serve(http.StatusOK, mix.JSON(nil))
+	err = mix.Write(w, mix.JSON(nil))
 
 	if err != nil {
 		log.Println(err)

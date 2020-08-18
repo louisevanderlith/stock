@@ -11,7 +11,15 @@ import (
 )
 
 func GetServices(w http.ResponseWriter, r *http.Request) {
-	results, err := core.GetServices(1, 10)
+	idn := drx.GetUserIdentity(r)
+	k, err := husk.ParseKey(idn.GetUserID())
+
+	if err != nil {
+		log.Println("Parse Error", err)
+		http.Error(w, "", http.StatusInternalServerError)
+	}
+
+	results, err := core.GetServices(1, 10, k)
 
 	if err != nil {
 		log.Println(err)
@@ -55,7 +63,16 @@ func ViewServices(w http.ResponseWriter, r *http.Request) {
 // @router /all/:pagesize [get]
 func SearchServices(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
-	results, err := core.GetServices(page, size)
+
+	idn := drx.GetUserIdentity(r)
+	k, err := husk.ParseKey(idn.GetUserID())
+
+	if err != nil {
+		log.Println("Parse Error", err)
+		http.Error(w, "", http.StatusInternalServerError)
+	}
+
+	results, err := core.GetServices(page, size, k)
 
 	if err != nil {
 		log.Println(err)
@@ -66,7 +83,7 @@ func SearchServices(w http.ResponseWriter, r *http.Request) {
 	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }
 

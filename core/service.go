@@ -8,7 +8,7 @@ type Service struct {
 }
 
 func (o Service) Valid() error {
-	return husk.ValidateStruct(o)
+	return husk.ValidateStruct(&o)
 }
 
 func GetService(key husk.Key) (Service, error) {
@@ -21,8 +21,8 @@ func GetService(key husk.Key) (Service, error) {
 	return rec.Data().(Service), nil
 }
 
-func GetServices(page, size int) (husk.Collection, error) {
-	return ctx.Services.Find(page, size, husk.Everything())
+func GetServices(page, size int, ownerKey husk.Key) (husk.Collection, error) {
+	return ctx.Services.Find(page, size, byOwner(ownerKey))
 }
 
 func (c Service) Create() (husk.Recorder, error) {

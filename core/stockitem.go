@@ -7,11 +7,16 @@ import (
 )
 
 type StockItem struct {
+	Profile      string
 	ImageKey     husk.Key
 	OwnerKey     husk.Key //Hero
 	Expires      time.Time
-	Price        int64 //Tokens can't be divided
+	Price        int64 //coins can't be divided
 	Tags         []Tag
 	Location     string `hsk:"size(128)"`
 	OwnerHistory map[time.Time]husk.Key
+}
+
+func (s StockItem) Valid() error {
+	return husk.ValidateStruct(&s)
 }

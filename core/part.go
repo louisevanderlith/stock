@@ -11,20 +11,6 @@ func (o Part) Valid() error {
 	return husk.ValidateStruct(o)
 }
 
-func GetPart(key husk.Key) (Part, error) {
-	rec, err := ctx.Parts.FindByKey(key)
-
-	if err != nil {
-		return Part{}, err
-	}
-
-	return rec.Data().(Part), nil
-}
-
-func GetLatestParts(page, size int) (husk.Collection, error) {
-	return ctx.Parts.Find(page, size, husk.Everything())
-}
-
 func (c Part) Create() (husk.Recorder, error) {
 	return ctx.Parts.Create(c)
 }

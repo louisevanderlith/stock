@@ -11,10 +11,11 @@ import (
 )
 
 func GetParts(w http.ResponseWriter, r *http.Request) {
-	results, err := core.GetLatestParts(1, 10)
+	idn := drx.GetIdentity(r)
+	results, err := core.Context().FindLatestParts(1, 10, idn.GetProfile())
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Find Parts Error", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
@@ -22,12 +23,11 @@ func GetParts(w http.ResponseWriter, r *http.Request) {
 	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }
 
-// /v1/part/:key
-func ViewParts(w http.ResponseWriter, r *http.Request) {
+func ViewPart(w http.ResponseWriter, r *http.Request) {
 	k := drx.FindParam(r, "key")
 	key, err := husk.ParseKey(k)
 
@@ -37,10 +37,10 @@ func ViewParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rec, err := core.GetPart(key)
+	rec, err := core.Context().GetPart(key)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Get Service Error", err)
 		http.Error(w, "", http.StatusNotFound)
 		return
 	}
@@ -48,45 +48,40 @@ func ViewParts(w http.ResponseWriter, r *http.Request) {
 	err = mix.Write(w, mix.JSON(rec))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }
 
-// @router /all/:pagesize [get]
 func SearchParts(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
-	results, err := core.GetLatestParts(page, size)
+
+	idn := drx.GetIdentity(r)
+	results, err := core.Context().FindLatestParts(page, size, idn.GetProfile())
 
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "", http.StatusNotFound)
+		log.Println("Find Parts Error", err)
+		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 
 	err = mix.Write(w, mix.JSON(results))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }
 
-// @Title RegisterWebsite
-// @Description Register a Website
-// @Param	body		body 	core.CarAdvert	true		"body for ad content"
-// @Success 200 {map[string]string} map[string]string
-// @Failure 403 body is empty
-// @router / [post]
-func CreateParts(w http.ResponseWriter, r *http.Request) {
+func CreatePart(w http.ResponseWriter, r *http.Request) {
 	var obj core.Part
 	err := drx.JSONBody(r, &obj)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Bind Error", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 
-	rec, err := obj.Create()
+	rec, err := core.Context().CreatePart(obj)
 
 	if err != nil {
 		log.Println("Create Error", err)
@@ -101,13 +96,7 @@ func CreateParts(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// @Title Update Car advert
-// @Description Updates a Advert
-// @Param	body		body 	core.CarAdvert	true		"body for ad content"
-// @Success 200 {map[string]string} map[string]string
-// @Failure 403 body is empty
-// @router / [put]
-func UpdateParts(w http.ResponseWriter, r *http.Request) {
+func UpdatePart(w http.ResponseWriter, r *http.Request) {
 	key, err := husk.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
@@ -116,8 +105,8 @@ func UpdateParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body := &core.Part{}
-	err = drx.JSONBody(r, body)
+	obj := core.Part{}
+	err = drx.JSONBody(r, &obj)
 
 	if err != nil {
 		log.Println(err)
@@ -125,17 +114,17 @@ func UpdateParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = body.Update(key)
+	err = core.Context().UpdatePart(key, obj)
 
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "", http.StatusBadRequest)
+		log.Println("Update Service Error", err)
+		http.Error(w, "", http.StatusNotFound)
 		return
 	}
 
 	err = mix.Write(w, mix.JSON(nil))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }

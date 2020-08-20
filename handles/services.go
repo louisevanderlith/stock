@@ -11,71 +11,11 @@ import (
 )
 
 func GetServices(w http.ResponseWriter, r *http.Request) {
-	idn := drx.GetUserIdentity(r)
-	k, err := husk.ParseKey(idn.GetUserID())
+	idn := drx.GetIdentity(r)
+	results, err := core.Context().FindServices(1, 10, idn.GetProfile())
 
 	if err != nil {
-		log.Println("Parse Error", err)
-		http.Error(w, "", http.StatusInternalServerError)
-	}
-
-	results, err := core.GetServices(1, 10, k)
-
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-
-	err = mix.Write(w, mix.JSON(results))
-
-	if err != nil {
-		log.Println(err)
-	}
-}
-
-// /v1/service/:key
-func ViewServices(w http.ResponseWriter, r *http.Request) {
-	k := drx.FindParam(r, "key")
-	key, err := husk.ParseKey(k)
-
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-
-	rec, err := core.GetService(key)
-
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "", http.StatusNotFound)
-		return
-	}
-
-	err = mix.Write(w, mix.JSON(rec))
-
-	if err != nil {
-		log.Println(err)
-	}
-}
-
-// @router /all/:pagesize [get]
-func SearchServices(w http.ResponseWriter, r *http.Request) {
-	page, size := drx.GetPageData(r)
-
-	idn := drx.GetUserIdentity(r)
-	k, err := husk.ParseKey(idn.GetUserID())
-
-	if err != nil {
-		log.Println("Parse Error", err)
-		http.Error(w, "", http.StatusInternalServerError)
-	}
-
-	results, err := core.GetServices(page, size, k)
-
-	if err != nil {
-		log.Println(err)
+		log.Println("Find Services Error", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
@@ -87,15 +27,9 @@ func SearchServices(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// @Title RegisterWebsite
-// @Description Register a Website
-// @Param	body		body 	core.CarAdvert	true		"body for ad content"
-// @Success 200 {map[string]string} map[string]string
-// @Failure 403 body is empty
-// @router / [post]
-func CreateServices(w http.ResponseWriter, r *http.Request) {
-	var obj core.Service
-	err := drx.JSONBody(r, &obj)
+func ViewService(w http.ResponseWriter, r *http.Request) {
+	k := drx.FindParam(r, "key")
+	key, err := husk.ParseKey(k)
 
 	if err != nil {
 		log.Println(err)
@@ -103,7 +37,51 @@ func CreateServices(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rec, err := obj.Create()
+	rec, err := core.Context().GetService(key)
+
+	if err != nil {
+		log.Println("Get Service Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(rec))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func SearchServices(w http.ResponseWriter, r *http.Request) {
+	page, size := drx.GetPageData(r)
+
+	idn := drx.GetIdentity(r)
+	results, err := core.Context().FindServices(page, size, idn.GetProfile())
+
+	if err != nil {
+		log.Println("Find Services Error", err)
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(results))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func CreateService(w http.ResponseWriter, r *http.Request) {
+	var obj core.Service
+	err := drx.JSONBody(r, &obj)
+
+	if err != nil {
+		log.Println("Bind Error", err)
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
+	rec, err := core.Context().CreateService(obj)
 
 	if err != nil {
 		log.Println("Create Error", err)
@@ -114,17 +92,11 @@ func CreateServices(w http.ResponseWriter, r *http.Request) {
 	err = mix.Write(w, mix.JSON(rec))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }
 
-// @Title Update Car advert
-// @Description Updates a Advert
-// @Param	body		body 	core.CarAdvert	true		"body for ad content"
-// @Success 200 {map[string]string} map[string]string
-// @Failure 403 body is empty
-// @router / [put]
-func UpdateServices(w http.ResponseWriter, r *http.Request) {
+func UpdateService(w http.ResponseWriter, r *http.Request) {
 	key, err := husk.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
@@ -133,8 +105,8 @@ func UpdateServices(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body := &core.Service{}
-	err = drx.JSONBody(r, body)
+	obj := core.Service{}
+	err = drx.JSONBody(r, &obj)
 
 	if err != nil {
 		log.Println(err)
@@ -142,10 +114,10 @@ func UpdateServices(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = body.Update(key)
+	err = core.Context().UpdateService(key, obj)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Update Service Error", err)
 		http.Error(w, "", http.StatusNotFound)
 		return
 	}
@@ -153,6 +125,6 @@ func UpdateServices(w http.ResponseWriter, r *http.Request) {
 	err = mix.Write(w, mix.JSON(nil))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
 	}
 }

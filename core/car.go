@@ -51,20 +51,6 @@ func (o Car) Valid() error {
 	return finErr
 }
 
-func GetCar(key husk.Key) (Car, error) {
-	rec, err := ctx.Cars.FindByKey(key)
-
-	if err != nil {
-		return Car{}, err
-	}
-
-	return rec.Data().(Car), nil
-}
-
-func GetLatestCars(page, size int) (husk.Collection, error) {
-	return ctx.Cars.Find(page, size, husk.Everything())
-}
-
 func (c Car) Create() (husk.Recorder, error) {
 	return ctx.Cars.Create(c)
 }

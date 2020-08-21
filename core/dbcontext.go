@@ -43,6 +43,22 @@ func CreateContext() {
 		Parts:      husk.NewTable(Part{}),
 		Properties: husk.NewTable(Property{}),
 	}
+	seed()
+}
+
+
+func seed() {
+	err := ctx.Services.Seed("db/services.seed.json")
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = ctx.Services.Save()
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func Shutdown() {
@@ -63,7 +79,7 @@ func (c context) GetService(key husk.Key) (Service, error) {
 }
 
 func (c context) FindServices(page, size int, profile string) (husk.Collection, error) {
-	return c.Services.Find(page, size, byProfile(profile))
+	return c.Services.Find(page, size, byServiceProfile(profile))
 }
 
 func (c context) CreateService(obj Service) (husk.Recorder, error) {

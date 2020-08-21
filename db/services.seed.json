@@ -1,6 +1,6 @@
 [
   {
-    "Profile": "",
+    "Profile": "idealcar",
     "Url": "http://localhost.leads",
     "ImageKey": "0`0",
     "EntityKey": "0`0",
@@ -9,10 +9,19 @@
     "Location": "montana"
   },
   {
+    "Profile": "idealcar",
+    "Url": "http://localhost.leads",
+    "ImageKey": "0`0",
+    "EntityKey": "0`0",
+    "Price": 55000,
+    "Tags": ["services", "leads"],
+    "Location": "montana"
+  },
+  {
     "Url": "http://localhost:8081",
     "ImageKey": "0`0",
     "EntityKey": "0`0",
-    "Price": 0,
+    "Price": 28000,
     "Tags": ["services", "cars"],
     "Location": "anywhere"
   },

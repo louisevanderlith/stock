@@ -12,7 +12,7 @@ type StockItem struct {
 	OwnerKey     husk.Key //Hero
 	Expires      time.Time
 	Price        int64 //coins can't be divided
-	Tags         []Tag
+	Tags         []string
 	Location     string `hsk:"size(128)"`
 	OwnerHistory map[time.Time]husk.Key
 }

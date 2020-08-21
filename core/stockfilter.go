@@ -14,3 +14,16 @@ func byProfile(name string) stockFilter {
 		return obj.Profile == name
 	}
 }
+
+type serviceFilter func(obj Service) bool
+
+func (f serviceFilter) Filter(obj husk.Dataer) bool {
+	return f(obj.(Service))
+}
+
+//byProfile filter will filter by stock Owner
+func byServiceProfile(name string) serviceFilter {
+	return func(obj Service) bool {
+		return obj.Profile == name
+	}
+}

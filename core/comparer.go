@@ -5,7 +5,7 @@ import (
 )
 
 // PriceInBounds will check if the requested price is within range of the recommended price
-func PriceInBounds(requestedPrice int64, recommendedPrice int64) error {
+func PriceInBounds(requestedPrice uint64, recommendedPrice uint64) error {
 	fraction := getFraction(recommendedPrice)
 	variance := getVariance(recommendedPrice, fraction)
 	upperLimit := getUpperLimit(recommendedPrice, variance)
@@ -18,8 +18,8 @@ func PriceInBounds(requestedPrice int64, recommendedPrice int64) error {
 	return nil
 }
 
-func getFraction(price int64) int64 {
-	fraction := int64(2)
+func getFraction(price uint64) uint64 {
+	fraction := uint64(2)
 	variance := price
 
 	for variance > 10 {
@@ -30,14 +30,14 @@ func getFraction(price int64) int64 {
 	return fraction
 }
 
-func getVariance(price int64, fraction int64) int64 {
+func getVariance(price uint64, fraction uint64) uint64 {
 	return price / fraction
 }
 
-func getUpperLimit(price int64, variance int64) int64 {
+func getUpperLimit(price uint64, variance uint64) uint64 {
 	return price + variance
 }
 
-func getLowerLimit(price int64, variance int64) int64 {
+func getLowerLimit(price uint64, variance uint64) uint64 {
 	return price - variance
 }

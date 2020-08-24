@@ -1,60 +1,94 @@
 [
   {
-    "Profile": "idealcar",
+    "ShortName": "Car Buyer",
+    "Profile": "mango",
     "Url": "http://localhost.leads",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 0,
-    "Tags": ["services", "leads"],
+    "Tags": [
+      "services",
+      "leads"
+    ],
     "Location": "montana"
   },
   {
-    "Profile": "idealcar",
+    "ShortName": "Also a Car Buyer",
+    "Profile": "tango",
     "Url": "http://localhost.leads",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 55000,
-    "Tags": ["services", "leads"],
+    "Tags": [
+      "services",
+      "leads"
+    ],
     "Location": "montana"
   },
   {
+    "ShortName": "Vehicle Portal",
+    "Profile": "tango",
     "Url": "http://localhost:8081",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 28000,
-    "Tags": ["services", "cars"],
+    "Tags": [
+      "services",
+      "cars"
+    ],
     "Location": "anywhere"
   },
   {
+    "ShortName": "Online Shop",
+    "Profile": "tango",
     "Url": "http://localhost:8083",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 0,
-    "Tags": ["services", "shop"],
+    "Tags": [
+      "services",
+      "shop",
+      "e-commerce"
+    ],
     "Location": "anywhere"
   },
   {
+    "ShortName": "Administration - LOCAL ONLY",
+    "Profile": "tango",
     "Url": "http://localhost:8088",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 0,
-    "Tags": ["services", "admin"],
+    "Tags": [
+      "services",
+      "admin"
+    ],
     "Location": "anywhere"
   },
   {
+    "ShortName": "Vehicle Service Centre",
+    "Profile": "tango",
     "Url": "http://localhost:8096",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 0,
-    "Tags": ["services", "workshop"],
+    "Tags": [
+      "services",
+      "workshop"
+    ],
     "Location": "anywhere"
   },
   {
+    "ShortName": "RTC App",
+    "Profile": "tango",
     "Url": "http://localhost:8105",
     "ImageKey": "0`0",
-    "EntityKey": "0`0",
+    "OwnerKey": "0`0",
     "Price": 0,
-    "Tags": ["services", "rtc"],
+    "Tags": [
+      "services",
+      "rtc"
+    ],
     "Location": "anywhere"
   }
 ]

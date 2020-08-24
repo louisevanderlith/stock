@@ -16,7 +16,7 @@ type Car struct {
 	Year          int    `orm:"null"`
 	Mileage       int    `orm:"null"`
 	HasNatis      bool   `hsk:"default(false)"`
-	EstValue      int64
+	EstValue      uint64
 	LicenseExpiry time.Time
 }
 
@@ -41,7 +41,7 @@ func (o Car) Valid() error {
 	}
 
 	//Price compare - Fair Price?
-	//Estimate Value should be populated with the Average price of similiar vehicles.
+	//Estimate Value should be populated with the Average price of the same types of vehicles.
 	if err := PriceInBounds(o.Price, o.EstValue); err != nil {
 		return err
 	}

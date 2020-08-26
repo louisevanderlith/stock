@@ -1,5 +1,4 @@
 import 'package:mango_stock/bodies/stockitem.dart';
-import 'package:mango_stock/bodies/tag.dart';
 import 'package:mango_ui/keys.dart';
 
 class Car extends StockItem {
@@ -11,21 +10,10 @@ class Car extends StockItem {
   final BigInt EstValue;
   final DateTime LicenseExpiry;
 
-  Car(
-      this.VehicleKey,
-      this.Info,
-      this.Year,
-      this.Mileage,
-      this.HasNatis,
-      this.EstValue,
-      this.LicenseExpiry,
-      Key ImageKey,
-      Key EntityKey,
-      DateTime Expires,
-      int Price,
-      List<Tag> Tags,
-      String Location)
-      : super(ImageKey, EntityKey, Expires, Price, Tags, Location);
+  Car(this.VehicleKey, this.Info, this.Year, this.Mileage, this.HasNatis,
+      this.EstValue, this.LicenseExpiry)
+      : super(super.ImageKey, super.OwnerKey, super.Expires, super.Price,
+            super.Tags, super.Location);
 
   Map<String, dynamic> toJson() {
     final result = super.toJson();

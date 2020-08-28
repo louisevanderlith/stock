@@ -2,7 +2,7 @@
   {
     "ShortName": "Car Buyer",
     "Profile": "mango",
-    "Url": "http://localhost.leads",
+    "Url": "http://localhost:8105",
     "ImageKey": "0`0",
     "OwnerKey": "0`0",
     "Price": 0,
@@ -15,7 +15,7 @@
   {
     "ShortName": "Also a Car Buyer",
     "Profile": "tango",
-    "Url": "http://localhost.leads",
+    "Url": "http://localhost:8105",
     "ImageKey": "0`0",
     "OwnerKey": "0`0",
     "Price": 55000,

@@ -46,7 +46,6 @@ func CreateContext() {
 	seed()
 }
 
-
 func seed() {
 	err := ctx.Services.Seed("db/services.seed.json")
 

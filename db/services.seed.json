@@ -26,6 +26,20 @@
     "Location": "montana"
   },
   {
+    "ShortName": "Profile Management",
+    "Profile": "tango",
+    "Url": "http://localhost:8107",
+    "ImageKey": "0`0",
+    "OwnerKey": "0`0",
+    "Price": 0,
+    "Tags": [
+      "security",
+      "entity",
+      "profile"
+    ],
+    "Location": "montana"
+  },
+  {
     "ShortName": "Vehicle Portal",
     "Profile": "tango",
     "Url": "http://localhost:8081",

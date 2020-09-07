@@ -12,11 +12,11 @@ type StockItem struct {
 	ImageKey     husk.Key
 	OwnerKey     husk.Key //Hero
 	Expires      time.Time
-	Price        uint64 //coins can't be divided, OR LESS THAN ZERO
+	Price        int64 //coins can't be divided, OR LESS THAN ZERO
 	Tags         []string
 	Location     string `hsk:"size(128)"`
 	OwnerHistory map[time.Time]husk.Key
-	Views        uint64
+	Views        int64
 }
 
 func (s StockItem) Valid() error {

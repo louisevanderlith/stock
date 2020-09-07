@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/louisevanderlith/husk"
+	"github.com/louisevanderlith/husk/validation"
 )
 
 type Property struct {
@@ -10,5 +10,5 @@ type Property struct {
 }
 
 func (p Property) Valid() error {
-	return husk.ValidateStruct(p)
+	return validation.Struct(p)
 }

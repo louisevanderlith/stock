@@ -3,10 +3,10 @@ package handles
 import (
 	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
+	"github.com/louisevanderlith/husk/keys"
 	"log"
 	"net/http"
 
-	"github.com/louisevanderlith/husk"
 	"github.com/louisevanderlith/stock/core"
 )
 
@@ -29,7 +29,7 @@ func GetParts(w http.ResponseWriter, r *http.Request) {
 
 func ViewPart(w http.ResponseWriter, r *http.Request) {
 	k := drx.FindParam(r, "key")
-	key, err := husk.ParseKey(k)
+	key, err := keys.ParseKey(k)
 
 	if err != nil {
 		log.Println(err)
@@ -97,7 +97,7 @@ func CreatePart(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdatePart(w http.ResponseWriter, r *http.Request) {
-	key, err := husk.ParseKey(drx.FindParam(r, "key"))
+	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
 		log.Println(err)

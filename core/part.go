@@ -1,6 +1,9 @@
 package core
 
-import "github.com/louisevanderlith/husk"
+import (
+	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/validation"
+)
 
 type Part struct {
 	StockItem
@@ -8,26 +11,13 @@ type Part struct {
 }
 
 func (o Part) Valid() error {
-	return husk.ValidateStruct(o)
+	return validation.Struct(o)
 }
 
-func (c Part) Create() (husk.Recorder, error) {
+func (c Part) Create() (hsk.Key, error) {
 	return ctx.Parts.Create(c)
 }
 
-func (c Part) Update(key husk.Key) error {
-	obj, err := ctx.Parts.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = obj.Set(c)
-
-	if err != nil {
-		return nil
-	}
-
-	defer ctx.Parts.Save()
-	return ctx.Parts.Update(obj)
+func (c Part) Update(key hsk.Key) error {
+	return ctx.Parts.Update(key, c)
 }

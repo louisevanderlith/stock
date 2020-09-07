@@ -1,17 +1,17 @@
 package core
 
 import (
+	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/validation"
 	"strings"
 	"time"
 
 	"errors"
-
-	"github.com/louisevanderlith/husk"
 )
 
 type Car struct {
 	StockItem
-	VehicleKey    husk.Key
+	VehicleKey    hsk.Key
 	Info          string `hsk:"size(128)"`
 	Year          int    `orm:"null"`
 	Mileage       int    `orm:"null"`
@@ -23,7 +23,7 @@ type Car struct {
 func (o Car) Valid() error {
 	var issues []string
 
-	err := husk.ValidateStruct(o)
+	err := validation.Struct(o)
 	if err != nil {
 		issues = append(issues, err.Error())
 	}
@@ -51,23 +51,10 @@ func (o Car) Valid() error {
 	return finErr
 }
 
-func (c Car) Create() (husk.Recorder, error) {
+func (c Car) Create() (hsk.Key, error) {
 	return ctx.Cars.Create(c)
 }
 
-func (c Car) Update(key husk.Key) error {
-	obj, err := ctx.Cars.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = obj.Set(c)
-
-	if err != nil {
-		return nil
-	}
-
-	defer ctx.Cars.Save()
-	return ctx.Cars.Update(obj)
+func (c Car) Update(key hsk.Key) error {
+	return ctx.Cars.Update(key, c)
 }

@@ -1,6 +1,8 @@
 package core
 
-import "github.com/louisevanderlith/husk"
+import (
+	"github.com/louisevanderlith/husk/validation"
+)
 
 type Service struct {
 	StockItem
@@ -8,5 +10,5 @@ type Service struct {
 }
 
 func (o Service) Valid() error {
-	return husk.ValidateStruct(&o)
+	return validation.Struct(o)
 }

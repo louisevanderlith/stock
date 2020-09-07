@@ -1,33 +1,39 @@
 package core
 
 import (
+	"encoding/json"
 	"github.com/louisevanderlith/husk"
+	"github.com/louisevanderlith/husk/collections"
+	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/records"
+	"os"
+	"reflect"
 )
 
 type StockContext interface {
-	GetService(key husk.Key) (Service, error)
-	FindServices(page, size int, profile string) (husk.Collection, error)
-	CreateService(obj Service) (husk.Recorder, error)
-	UpdateService(key husk.Key, obj Service) error
-	GetCar(key husk.Key) (Car, error)
-	FindLatestCars(page, size int, profile string) (husk.Collection, error)
-	CreateCar(obj Car) (husk.Recorder, error)
-	UpdateCar(key husk.Key, obj Car) error
-	GetPart(key husk.Key) (Part, error)
-	FindLatestParts(page, size int, profile string) (husk.Collection, error)
-	CreatePart(obj Part) (husk.Recorder, error)
-	UpdatePart(key husk.Key, obj Part) error
-	GetProperty(key husk.Key) (Property, error)
-	FindLatestProperties(page, size int, profile string) (husk.Collection, error)
-	CreateProperty(obj Property) (husk.Recorder, error)
-	UpdateProperty(key husk.Key, obj Property) error
+	GetService(key hsk.Key) (Service, error)
+	FindServices(page, size int, profile string) (records.Page, error)
+	CreateService(obj Service) (hsk.Key, error)
+	UpdateService(key hsk.Key, obj Service) error
+	GetCar(key hsk.Key) (Car, error)
+	FindLatestCars(page, size int, profile string) (records.Page, error)
+	CreateCar(obj Car) (hsk.Key, error)
+	UpdateCar(key hsk.Key, obj Car) error
+	GetPart(key hsk.Key) (Part, error)
+	FindLatestParts(page, size int, profile string) (records.Page, error)
+	CreatePart(obj Part) (hsk.Key, error)
+	UpdatePart(key hsk.Key, obj Part) error
+	GetProperty(key hsk.Key) (Property, error)
+	FindLatestProperties(page, size int, profile string) (records.Page, error)
+	CreateProperty(obj Property) (hsk.Key, error)
+	UpdateProperty(key hsk.Key, obj Property) error
 }
 
 type context struct {
-	Cars       husk.Tabler
-	Services   husk.Tabler
-	Parts      husk.Tabler
-	Properties husk.Tabler
+	Cars       husk.Table
+	Services   husk.Table
+	Parts      husk.Table
+	Properties husk.Table
 }
 
 var ctx context
@@ -47,17 +53,35 @@ func CreateContext() {
 }
 
 func seed() {
-	err := ctx.Services.Seed("db/services.seed.json")
+	services, err := serviceSeeds()
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = ctx.Services.Save()
+	err = ctx.Services.Seed(services)
 
 	if err != nil {
 		panic(err)
 	}
+}
+
+func serviceSeeds() (collections.Enumerable, error) {
+	f, err := os.Open("db/services.seed.json")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var items []Service
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&items)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return collections.ReadOnlyList(reflect.ValueOf(items)), nil
 }
 
 func Shutdown() {
@@ -67,7 +91,7 @@ func Shutdown() {
 	ctx.Properties.Save()
 }
 
-func (c context) GetService(key husk.Key) (Service, error) {
+func (c context) GetService(key hsk.Key) (Service, error) {
 	rec, err := c.Services.FindByKey(key)
 
 	if err != nil {
@@ -77,37 +101,19 @@ func (c context) GetService(key husk.Key) (Service, error) {
 	return rec.Data().(Service), nil
 }
 
-func (c context) FindServices(page, size int, profile string) (husk.Collection, error) {
+func (c context) FindServices(page, size int, profile string) (records.Page, error) {
 	return c.Services.Find(page, size, byServiceProfile(profile))
 }
 
-func (c context) CreateService(obj Service) (husk.Recorder, error) {
+func (c context) CreateService(obj Service) (hsk.Key, error) {
 	return c.Services.Create(obj)
 }
 
-func (c context) UpdateService(key husk.Key, obj Service) error {
-	rec, err := c.Services.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = rec.Set(obj)
-
-	if err != nil {
-		return nil
-	}
-
-	err = c.Services.Update(rec)
-
-	if err != nil {
-		return err
-	}
-
-	return c.Services.Save()
+func (c context) UpdateService(key hsk.Key, obj Service) error {
+	return c.Services.Update(key, obj)
 }
 
-func (c context) GetCar(key husk.Key) (Car, error) {
+func (c context) GetCar(key hsk.Key) (Car, error) {
 	rec, err := c.Cars.FindByKey(key)
 
 	if err != nil {
@@ -117,37 +123,19 @@ func (c context) GetCar(key husk.Key) (Car, error) {
 	return rec.Data().(Car), nil
 }
 
-func (c context) FindLatestCars(page, size int, profile string) (husk.Collection, error) {
+func (c context) FindLatestCars(page, size int, profile string) (records.Page, error) {
 	return c.Cars.Find(page, size, byProfile(profile))
 }
 
-func (c context) CreateCar(obj Car) (husk.Recorder, error) {
+func (c context) CreateCar(obj Car) (hsk.Key, error) {
 	return c.Cars.Create(obj)
 }
 
-func (c context) UpdateCar(key husk.Key, obj Car) error {
-	rec, err := c.Cars.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = rec.Set(obj)
-
-	if err != nil {
-		return nil
-	}
-
-	err = c.Cars.Update(rec)
-
-	if err != nil {
-		return err
-	}
-
-	return c.Cars.Save()
+func (c context) UpdateCar(key hsk.Key, obj Car) error {
+	return c.Cars.Update(key, obj)
 }
 
-func (c context) GetPart(key husk.Key) (Part, error) {
+func (c context) GetPart(key hsk.Key) (Part, error) {
 	rec, err := c.Parts.FindByKey(key)
 
 	if err != nil {
@@ -157,37 +145,19 @@ func (c context) GetPart(key husk.Key) (Part, error) {
 	return rec.Data().(Part), nil
 }
 
-func (c context) FindLatestParts(page, size int, profile string) (husk.Collection, error) {
+func (c context) FindLatestParts(page, size int, profile string) (records.Page, error) {
 	return c.Parts.Find(page, size, byProfile(profile))
 }
 
-func (c context) CreatePart(obj Part) (husk.Recorder, error) {
+func (c context) CreatePart(obj Part) (hsk.Key, error) {
 	return c.Parts.Create(obj)
 }
 
-func (c context) UpdatePart(key husk.Key, obj Part) error {
-	rec, err := c.Parts.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = rec.Set(obj)
-
-	if err != nil {
-		return nil
-	}
-
-	err = c.Parts.Update(rec)
-
-	if err != nil {
-		return err
-	}
-
-	return c.Parts.Save()
+func (c context) UpdatePart(key hsk.Key, obj Part) error {
+	return c.Parts.Update(key, obj)
 }
 
-func (c context) GetProperty(key husk.Key) (Property, error) {
+func (c context) GetProperty(key hsk.Key) (Property, error) {
 	rec, err := c.Properties.FindByKey(key)
 
 	if err != nil {
@@ -197,32 +167,14 @@ func (c context) GetProperty(key husk.Key) (Property, error) {
 	return rec.Data().(Property), nil
 }
 
-func (c context) FindLatestProperties(page, size int, profile string) (husk.Collection, error) {
+func (c context) FindLatestProperties(page, size int, profile string) (records.Page, error) {
 	return c.Properties.Find(page, size, byProfile(profile))
 }
 
-func (c context) CreateProperty(obj Property) (husk.Recorder, error) {
+func (c context) CreateProperty(obj Property) (hsk.Key, error) {
 	return c.Properties.Create(obj)
 }
 
-func (c context) UpdateProperty(key husk.Key, obj Property) error {
-	rec, err := c.Properties.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = rec.Set(obj)
-
-	if err != nil {
-		return nil
-	}
-
-	err = c.Properties.Update(rec)
-
-	if err != nil {
-		return err
-	}
-
-	return c.Properties.Save()
+func (c context) UpdateProperty(key hsk.Key, obj Property) error {
+	return c.Properties.Update(key, obj)
 }

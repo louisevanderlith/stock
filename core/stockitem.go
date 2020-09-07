@@ -1,24 +1,25 @@
 package core
 
 import (
+	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/keys"
+	"github.com/louisevanderlith/husk/validation"
 	"time"
-
-	"github.com/louisevanderlith/husk"
 )
 
 type StockItem struct {
 	ShortName    string `hsk:"size(128)"`
 	Profile      string
-	ImageKey     husk.Key
-	OwnerKey     husk.Key //Hero
+	ImageKey     keys.TimeKey
+	OwnerKey     keys.TimeKey //Hero
 	Expires      time.Time
 	Price        uint64 //coins can't be divided, OR LESS THAN ZERO
 	Tags         []string
 	Location     string `hsk:"size(128)"`
-	OwnerHistory map[time.Time]husk.Key
+	OwnerHistory map[time.Time]hsk.Key
 	Views        uint64
 }
 
 func (s StockItem) Valid() error {
-	return husk.ValidateStruct(&s)
+	return validation.Struct(s)
 }

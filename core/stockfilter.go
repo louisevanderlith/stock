@@ -1,11 +1,13 @@
 package core
 
-import "github.com/louisevanderlith/husk"
+import (
+	"github.com/louisevanderlith/husk/hsk"
+)
 
 type stockFilter func(obj StockItem) bool
 
-func (f stockFilter) Filter(obj husk.Dataer) bool {
-	return f(obj.(StockItem))
+func (f stockFilter) Filter(obj hsk.Record) bool {
+	return f(obj.Data().(StockItem))
 }
 
 //byProfile filter will filter by stock Owner
@@ -17,8 +19,8 @@ func byProfile(name string) stockFilter {
 
 type serviceFilter func(obj Service) bool
 
-func (f serviceFilter) Filter(obj husk.Dataer) bool {
-	return f(obj.(Service))
+func (f serviceFilter) Filter(obj hsk.Record) bool {
+	return f(obj.Data().(Service))
 }
 
 //byProfile filter will filter by stock Owner

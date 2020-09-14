@@ -16,7 +16,7 @@ type Car struct {
 	Year          int    `orm:"null"`
 	Mileage       int    `orm:"null"`
 	HasNatis      bool   `hsk:"default(false)"`
-	EstValue      uint64
+	EstValue      int64
 	LicenseExpiry time.Time
 }
 

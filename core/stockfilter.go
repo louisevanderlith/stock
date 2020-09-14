@@ -7,7 +7,7 @@ import (
 type stockFilter func(obj StockItem) bool
 
 func (f stockFilter) Filter(obj hsk.Record) bool {
-	return f(obj.Data().(StockItem))
+	return f(obj.GetValue().(StockItem))
 }
 
 //byProfile filter will filter by stock Owner
@@ -20,7 +20,7 @@ func byProfile(name string) stockFilter {
 type serviceFilter func(obj Service) bool
 
 func (f serviceFilter) Filter(obj hsk.Record) bool {
-	return f(obj.Data().(Service))
+	return f(obj.GetValue().(Service))
 }
 
 //byProfile filter will filter by stock Owner

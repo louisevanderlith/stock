@@ -98,7 +98,7 @@ func (c context) GetService(key hsk.Key) (Service, error) {
 		return Service{}, err
 	}
 
-	return rec.Data().(Service), nil
+	return rec.GetValue().(Service), nil
 }
 
 func (c context) FindServices(page, size int, profile string) (records.Page, error) {
@@ -120,7 +120,7 @@ func (c context) GetCar(key hsk.Key) (Car, error) {
 		return Car{}, err
 	}
 
-	return rec.Data().(Car), nil
+	return rec.GetValue().(Car), nil
 }
 
 func (c context) FindLatestCars(page, size int, profile string) (records.Page, error) {
@@ -142,7 +142,7 @@ func (c context) GetPart(key hsk.Key) (Part, error) {
 		return Part{}, err
 	}
 
-	return rec.Data().(Part), nil
+	return rec.GetValue().(Part), nil
 }
 
 func (c context) FindLatestParts(page, size int, profile string) (records.Page, error) {
@@ -164,7 +164,7 @@ func (c context) GetProperty(key hsk.Key) (Property, error) {
 		return Property{}, err
 	}
 
-	return rec.Data().(Property), nil
+	return rec.GetValue().(Property), nil
 }
 
 func (c context) FindLatestProperties(page, size int, profile string) (records.Page, error) {

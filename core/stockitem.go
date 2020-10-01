@@ -16,7 +16,7 @@ type StockItem struct {
 	Price        int64 //coins can't be divided, OR LESS THAN ZERO
 	Tags         []string
 	Location     string `hsk:"size(128)"`
-	OwnerHistory map[time.Time]husk.Key
+	OwnerHistory map[time.Time]hsk.Key
 	Views        int64
 }
 

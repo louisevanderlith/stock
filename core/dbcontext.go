@@ -15,6 +15,10 @@ type StockContext interface {
 	FindServices(page, size int, profile string) (records.Page, error)
 	CreateService(obj Service) (hsk.Key, error)
 	UpdateService(key hsk.Key, obj Service) error
+	GetClothing(key hsk.Key) (Clothing, error)
+	FindClothing(page, size int, profile string) (records.Page, error)
+	CreateClothing(obj Clothing) (hsk.Key, error)
+	UpdateClothing(key hsk.Key, obj Clothing) error
 	GetCar(key hsk.Key) (Car, error)
 	FindLatestCars(page, size int, profile string) (records.Page, error)
 	CreateCar(obj Car) (hsk.Key, error)
@@ -34,6 +38,7 @@ type context struct {
 	Services   husk.Table
 	Parts      husk.Table
 	Properties husk.Table
+	Clothing   husk.Table
 }
 
 var ctx context
@@ -48,7 +53,9 @@ func CreateContext() {
 		Services:   husk.NewTable(Service{}),
 		Parts:      husk.NewTable(Part{}),
 		Properties: husk.NewTable(Property{}),
+		Clothing:   husk.NewTable(Clothing{}),
 	}
+
 	seed()
 }
 
@@ -64,6 +71,18 @@ func seed() {
 	if err != nil {
 		panic(err)
 	}
+
+	clothes, err := clothingSeeds()
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = ctx.Clothing.Seed(clothes)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func serviceSeeds() (collections.Enumerable, error) {
@@ -74,6 +93,24 @@ func serviceSeeds() (collections.Enumerable, error) {
 	}
 
 	var items []Service
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&items)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return collections.ReadOnlyList(reflect.ValueOf(items)), nil
+}
+
+func clothingSeeds() (collections.Enumerable, error) {
+	f, err := os.Open("db/clothing.seed.json")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var items []Clothing
 	dec := json.NewDecoder(f)
 	err = dec.Decode(&items)
 
@@ -111,6 +148,28 @@ func (c context) CreateService(obj Service) (hsk.Key, error) {
 
 func (c context) UpdateService(key hsk.Key, obj Service) error {
 	return c.Services.Update(key, obj)
+}
+
+func (c context) GetClothing(key hsk.Key) (Clothing, error) {
+	rec, err := c.Clothing.FindByKey(key)
+
+	if err != nil {
+		return Clothing{}, err
+	}
+
+	return rec.GetValue().(Clothing), nil
+}
+
+func (c context) FindClothing(page, size int, profile string) (records.Page, error) {
+	return c.Clothing.Find(page, size, byClothingCategory(profile))
+}
+
+func (c context) CreateClothing(obj Clothing) (hsk.Key, error) {
+	return c.Clothing.Create(obj)
+}
+
+func (c context) UpdateClothing(key hsk.Key, obj Clothing) error {
+	return c.Clothing.Update(key, obj)
 }
 
 func (c context) GetCar(key hsk.Key) (Car, error) {

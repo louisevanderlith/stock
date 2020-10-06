@@ -17,7 +17,7 @@ type StockItem struct {
 	Tags         []string
 	Location     string `hsk:"size(128)"`
 	OwnerHistory map[time.Time]hsk.Key
-	Views        int64
+	Views        int64 `hsk:"null"`
 }
 
 func (s StockItem) Valid() error {

@@ -78,6 +78,22 @@ func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
 	updateS := ins.Middleware("stock.services.update", scrt, UpdateService)
 	r.HandleFunc("/services/{key:[0-9]+\\x60[0-9]+}", updateS).Methods(http.MethodPut)
 
+	getCl := ins.Middleware("stock.clothing.search", scrt, GetServices)
+	r.HandleFunc("/clothing", getCl).Methods(http.MethodGet)
+
+	viewCl := ins.Middleware("stock.clothing.view", scrt, ViewService)
+	r.HandleFunc("/clothing/{key:[0-9]+\\x60[0-9]+}", viewCl).Methods(http.MethodGet)
+
+	srchCl := ins.Middleware("stock.clothing.search", scrt, SearchClothing)
+	r.HandleFunc("/clothing/{pagesize:[A-Z][0-9]+}", srchCl).Methods(http.MethodGet)
+	r.HandleFunc("/clothing/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchCl).Methods(http.MethodGet)
+
+	createCl := ins.Middleware("stock.clothing.create", scrt, CreateClothing)
+	r.HandleFunc("/clothing", createCl).Methods(http.MethodPost)
+
+	updateCl := ins.Middleware("stock.clothing.update", scrt, UpdateClothing)
+	r.HandleFunc("/clothing/{key:[0-9]+\\x60[0-9]+}", updateCl).Methods(http.MethodPut)
+
 	lst, err := middle.Whitelist(http.DefaultClient, securityUrl, "stock.cars.search", scrt)
 
 	if err != nil {

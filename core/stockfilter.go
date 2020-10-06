@@ -29,3 +29,16 @@ func byServiceProfile(name string) serviceFilter {
 		return obj.Profile == name
 	}
 }
+
+type clothingFilter func(obj Clothing) bool
+
+func (f clothingFilter) Filter(obj hsk.Record) bool {
+	return f(obj.GetValue().(Clothing))
+}
+
+//byProfile filter will filter by stock Owner
+func byClothingCategory(profile string) clothingFilter {
+	return func(obj Clothing) bool {
+		return obj.Profile == profile
+	}
+}

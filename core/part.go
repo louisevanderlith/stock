@@ -1,46 +1,23 @@
 package core
 
-import "github.com/louisevanderlith/husk"
+import (
+	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/validation"
+)
 
 type Part struct {
 	StockItem
+	Number string
 }
 
-func (o Part) Valid() (bool, error) {
-	return husk.ValidateStruct(&o)
+func (o Part) Valid() error {
+	return validation.Struct(o)
 }
 
-func GetPart(key husk.Key) (*Part, error) {
-	rec, err := ctx.Parts.FindByKey(key)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return rec.Data().(*Part), nil
-}
-
-func GetLatestParts(page, size int) husk.Collection {
-	return ctx.Parts.Find(page, size, husk.Everything())
-}
-
-func (c Part) Create() husk.CreateSet {
+func (c Part) Create() (hsk.Key, error) {
 	return ctx.Parts.Create(c)
 }
 
-func (c Part) Update(key husk.Key) error {
-	obj, err := ctx.Parts.FindByKey(key)
-
-	if err != nil {
-		return err
-	}
-
-	err = obj.Set(c)
-
-	if err != nil {
-		return nil
-	}
-
-	defer ctx.Parts.Save()
-	return ctx.Parts.Update(obj)
+func (c Part) Update(key hsk.Key) error {
+	return ctx.Parts.Update(key, c)
 }

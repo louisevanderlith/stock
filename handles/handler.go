@@ -2,106 +2,62 @@ package handles
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/louisevanderlith/kong/middle"
+	"github.com/louisevanderlith/droxolite/open"
 	"github.com/rs/cors"
 	"net/http"
 )
 
-func SetupRoutes(scrt, securityUrl, managerUrl string) http.Handler {
+func SetupRoutes(issuer, audience string) http.Handler {
 	r := mux.NewRouter()
-	ins := middle.NewResourceInspector(http.DefaultClient, securityUrl, managerUrl)
+	mw := open.BearerMiddleware(audience, issuer)
 	//cars
-	getC := ins.Middleware("stock.cars.search", scrt, GetCars)
-	r.HandleFunc("/cars", getC).Methods(http.MethodGet)
-
-	viewC := ins.Middleware("stock.cars.view", scrt, ViewCar)
-	r.HandleFunc("/cars/{key:[0-9]+\\x60[0-9]+}", viewC).Methods(http.MethodGet)
-
-	srchC := ins.Middleware("stock.cars.search", scrt, SearchCars)
-	r.HandleFunc("/cars/{pagesize:[A-Z][0-9]+}", srchC).Methods(http.MethodGet)
-	r.HandleFunc("/cars/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchC).Methods(http.MethodGet)
-
-	createC := ins.Middleware("stock.cars.create", scrt, CreateCar)
-	r.HandleFunc("/cars", createC).Methods(http.MethodPost)
-
-	updateC := ins.Middleware("stock.cars.update", scrt, UpdateCar)
-	r.HandleFunc("/cars/{key:[0-9]+\\x60[0-9]+}", updateC).Methods(http.MethodPut)
+	r.Handle("/cars", mw.Handler(http.HandlerFunc(GetCars))).Methods(http.MethodGet)
+	r.Handle("/cars/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCar))).Methods(http.MethodGet)
+	r.Handle("/cars/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchCars))).Methods(http.MethodGet)
+	r.Handle("/cars/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchCars))).Methods(http.MethodGet)
+	r.Handle("/cars", mw.Handler(http.HandlerFunc(CreateCar))).Methods(http.MethodPost)
+	r.Handle("/cars/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCar))).Methods(http.MethodPut)
 
 	//parts
-	getPa := ins.Middleware("stock.parts.search", scrt, GetParts)
-	r.HandleFunc("/parts", getPa).Methods(http.MethodGet)
-
-	viewPa := ins.Middleware("stock.parts.view", scrt, ViewPart)
-	r.HandleFunc("/parts/{key:[0-9]+\\x60[0-9]+}", viewPa).Methods(http.MethodGet)
-
-	srchPa := ins.Middleware("stock.parts.search", scrt, SearchParts)
-	r.HandleFunc("/parts/{pagesize:[A-Z][0-9]+}", srchPa).Methods(http.MethodGet)
-	r.HandleFunc("/parts/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchPa).Methods(http.MethodGet)
-
-	createPa := ins.Middleware("stock.parts.create", scrt, CreatePart)
-	r.HandleFunc("/parts", createPa).Methods(http.MethodPost)
-
-	updatePa := ins.Middleware("stock.parts.update", scrt, UpdatePart)
-	r.HandleFunc("/parts/{key:[0-9]+\\x60[0-9]+}", updatePa).Methods(http.MethodPut)
+	r.Handle("/parts", mw.Handler(http.HandlerFunc(GetParts))).Methods(http.MethodGet)
+	r.Handle("/parts/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewPart))).Methods(http.MethodGet)
+	r.Handle("/parts/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchParts))).Methods(http.MethodGet)
+	r.Handle("/parts/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchParts))).Methods(http.MethodGet)
+	r.Handle("/parts", mw.Handler(http.HandlerFunc(CreatePart))).Methods(http.MethodPost)
+	r.Handle("/parts/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdatePart))).Methods(http.MethodPut)
 
 	//properties
-	getP := ins.Middleware("stock.properties.search", scrt, GetProperties)
-	r.HandleFunc("/properties", getP).Methods(http.MethodGet)
-
-	viewP := ins.Middleware("stock.properties.view", scrt, ViewPart)
-	r.HandleFunc("/properties/{key:[0-9]+\\x60[0-9]+}", viewP).Methods(http.MethodGet)
-
-	srchP := ins.Middleware("stock.properties.search", scrt, SearchParts)
-	r.HandleFunc("/properties/{pagesize:[A-Z][0-9]+}", srchP).Methods(http.MethodGet)
-	r.HandleFunc("/properties/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchP).Methods(http.MethodGet)
-
-	createP := ins.Middleware("stock.properties.create", scrt, CreatePart)
-	r.HandleFunc("/properties", createP).Methods(http.MethodPost)
-
-	updateP := ins.Middleware("stock.properties.update", scrt, UpdateProperty)
-	r.HandleFunc("/properties/{key:[0-9]+\\x60[0-9]+}", updateP).Methods(http.MethodPut)
+	r.Handle("/properties", mw.Handler(http.HandlerFunc(GetProperties))).Methods(http.MethodGet)
+	r.Handle("/properties/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewProperty))).Methods(http.MethodGet)
+	r.Handle("/properties/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchProperties))).Methods(http.MethodGet)
+	r.Handle("/properties/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchProperties))).Methods(http.MethodGet)
+	r.Handle("/properties", mw.Handler(http.HandlerFunc(CreateProperty))).Methods(http.MethodPost)
+	r.Handle("/properties/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateProperty))).Methods(http.MethodPut)
 
 	//services
-	getS := ins.Middleware("stock.services.search", scrt, GetServices)
-	r.HandleFunc("/services", getS).Methods(http.MethodGet)
+	r.Handle("/services", mw.Handler(http.HandlerFunc(GetServices))).Methods(http.MethodGet)
+	r.Handle("/services/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewService))).Methods(http.MethodGet)
+	r.Handle("/services/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchServices))).Methods(http.MethodGet)
+	r.Handle("/services/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchServices))).Methods(http.MethodGet)
+	r.Handle("/services", mw.Handler(http.HandlerFunc(CreateService))).Methods(http.MethodPost)
+	r.Handle("/services/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateService))).Methods(http.MethodPut)
 
-	viewS := ins.Middleware("stock.services.view", scrt, ViewService)
-	r.HandleFunc("/services/{key:[0-9]+\\x60[0-9]+}", viewS).Methods(http.MethodGet)
+	//clothing
+	r.Handle("/clothes", mw.Handler(http.HandlerFunc(GetClothing))).Methods(http.MethodGet)
+	r.Handle("/clothes/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewClothing))).Methods(http.MethodGet)
+	r.Handle("/clothes/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchClothing))).Methods(http.MethodGet)
+	r.Handle("/clothes/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchClothing))).Methods(http.MethodGet)
+	r.Handle("/clothes", mw.Handler(http.HandlerFunc(CreateClothing))).Methods(http.MethodPost)
+	r.Handle("/clothes/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateClothing))).Methods(http.MethodPut)
 
-	srchS := ins.Middleware("stock.services.search", scrt, SearchServices)
-	r.HandleFunc("/services/{pagesize:[A-Z][0-9]+}", srchS).Methods(http.MethodGet)
-	r.HandleFunc("/services/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchS).Methods(http.MethodGet)
+	//lst, err := middle.Whitelist(http.DefaultClient, securityUrl, "stock.cars.search", scrt)
 
-	createS := ins.Middleware("stock.services.create", scrt, CreateService)
-	r.HandleFunc("/services", createS).Methods(http.MethodPost)
-
-	updateS := ins.Middleware("stock.services.update", scrt, UpdateService)
-	r.HandleFunc("/services/{key:[0-9]+\\x60[0-9]+}", updateS).Methods(http.MethodPut)
-
-	getCl := ins.Middleware("stock.clothing.search", scrt, GetServices)
-	r.HandleFunc("/clothing", getCl).Methods(http.MethodGet)
-
-	viewCl := ins.Middleware("stock.clothing.view", scrt, ViewService)
-	r.HandleFunc("/clothing/{key:[0-9]+\\x60[0-9]+}", viewCl).Methods(http.MethodGet)
-
-	srchCl := ins.Middleware("stock.clothing.search", scrt, SearchClothing)
-	r.HandleFunc("/clothing/{pagesize:[A-Z][0-9]+}", srchCl).Methods(http.MethodGet)
-	r.HandleFunc("/clothing/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", srchCl).Methods(http.MethodGet)
-
-	createCl := ins.Middleware("stock.clothing.create", scrt, CreateClothing)
-	r.HandleFunc("/clothing", createCl).Methods(http.MethodPost)
-
-	updateCl := ins.Middleware("stock.clothing.update", scrt, UpdateClothing)
-	r.HandleFunc("/clothing/{key:[0-9]+\\x60[0-9]+}", updateCl).Methods(http.MethodPut)
-
-	lst, err := middle.Whitelist(http.DefaultClient, securityUrl, "stock.cars.search", scrt)
-
-	if err != nil {
-		panic(err)
-	}
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	corsOpts := cors.New(cors.Options{
-		AllowedOrigins: lst,
+		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{
 			http.MethodGet,
 			http.MethodPost,

@@ -1,6 +1,7 @@
 package handles
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
 	"github.com/louisevanderlith/husk/keys"
@@ -11,8 +12,9 @@ import (
 )
 
 func GetCars(w http.ResponseWriter, r *http.Request) {
-	idn := drx.GetIdentity(r)
-	results, err := core.Context().FindLatestCars(1, 10, idn.GetProfile())
+	token := r.Context().Value("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	results, err := core.Context().FindLatestCars(1, 10, claims["azp"].(string))
 
 	if err != nil {
 		log.Println("Find Cars Error", err)
@@ -55,8 +57,9 @@ func ViewCar(w http.ResponseWriter, r *http.Request) {
 func SearchCars(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
 
-	idn := drx.GetIdentity(r)
-	results, err := core.Context().FindLatestCars(page, size, idn.GetProfile())
+	token := r.Context().Value("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	results, err := core.Context().FindLatestCars(page, size, claims["azp"].(string))
 
 	if err != nil {
 		log.Println("Find Parts Error", err)

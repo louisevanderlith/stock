@@ -1,6 +1,7 @@
 package handles
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
 	"github.com/louisevanderlith/husk/keys"
@@ -11,8 +12,9 @@ import (
 )
 
 func GetProperties(w http.ResponseWriter, r *http.Request) {
-	idn := drx.GetIdentity(r)
-	results, err := core.Context().FindLatestProperties(1, 10, idn.GetProfile())
+	token := r.Context().Value("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	results, err := core.Context().FindLatestProperties(1, 10, claims["azp"].(string))
 
 	if err != nil {
 		log.Println("Find Properties Error", err)
@@ -55,8 +57,9 @@ func ViewProperty(w http.ResponseWriter, r *http.Request) {
 func SearchProperties(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
 
-	idn := drx.GetIdentity(r)
-	results, err := core.Context().FindLatestProperties(page, size, idn.GetProfile())
+	token := r.Context().Value("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	results, err := core.Context().FindLatestProperties(page, size, claims["azp"].(string))
 
 	if err != nil {
 		log.Println("Find Services Error", err)

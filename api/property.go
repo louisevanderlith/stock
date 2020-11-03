@@ -6,6 +6,7 @@ import (
 	"github.com/louisevanderlith/husk/hsk"
 	"github.com/louisevanderlith/husk/records"
 	"github.com/louisevanderlith/stock/core"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -18,6 +19,11 @@ func FetchProperty(web *http.Client, host string, k hsk.Key) (core.Property, err
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return core.Property{}, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
 
 	result := core.Property{}
 	dec := json.NewDecoder(resp.Body)
@@ -35,6 +41,11 @@ func FetchAllProperties(web *http.Client, host, pagesize string) (records.Page, 
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
 
 	result := records.NewResultPage(core.Property{})
 	dec := json.NewDecoder(resp.Body)

@@ -6,6 +6,7 @@ import (
 	"github.com/louisevanderlith/husk/collections"
 	"github.com/louisevanderlith/husk/hsk"
 	"github.com/louisevanderlith/husk/records"
+	"log"
 	"os"
 	"reflect"
 )
@@ -83,6 +84,19 @@ func seed() {
 	if err != nil {
 		panic(err)
 	}
+
+	cars, err := carSeeds()
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = ctx.Cars.Seed(cars)
+
+	if err != nil {
+		log.Println("CAR ERR", err)
+		panic(err)
+	}
 }
 
 func serviceSeeds() (collections.Enumerable, error) {
@@ -93,6 +107,24 @@ func serviceSeeds() (collections.Enumerable, error) {
 	}
 
 	var items []Service
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&items)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return collections.ReadOnlyList(reflect.ValueOf(items)), nil
+}
+
+func carSeeds() (collections.Enumerable, error) {
+	f, err := os.Open("db/cars.seed.json")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var items []Car
 	dec := json.NewDecoder(f)
 	err = dec.Decode(&items)
 
@@ -183,7 +215,7 @@ func (c context) GetCar(key hsk.Key) (Car, error) {
 }
 
 func (c context) FindLatestCars(page, size int, profile string) (records.Page, error) {
-	return c.Cars.Find(page, size, byProfile(profile))
+	return c.Cars.Find(page, size, byCarProfile(profile))
 }
 
 func (c context) CreateCar(obj Car) (hsk.Key, error) {
@@ -205,7 +237,7 @@ func (c context) GetPart(key hsk.Key) (Part, error) {
 }
 
 func (c context) FindLatestParts(page, size int, profile string) (records.Page, error) {
-	return c.Parts.Find(page, size, byProfile(profile))
+	return c.Parts.Find(page, size, byPartProfile(profile))
 }
 
 func (c context) CreatePart(obj Part) (hsk.Key, error) {
@@ -227,7 +259,7 @@ func (c context) GetProperty(key hsk.Key) (Property, error) {
 }
 
 func (c context) FindLatestProperties(page, size int, profile string) (records.Page, error) {
-	return c.Properties.Find(page, size, byProfile(profile))
+	return c.Properties.Find(page, size, byPropertyProfile(profile))
 }
 
 func (c context) CreateProperty(obj Property) (hsk.Key, error) {

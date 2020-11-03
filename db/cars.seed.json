@@ -1,0 +1,48 @@
+[
+  {
+    "ShortName": "Toyota Fortuner 1999",
+    "Profile": "cars",
+    "ImageKey": "0`0",
+    "OwnerKey": "0`0",
+    "Expires": "2006-01-02T15:04:05+07:00",
+    "Price": 87,
+    "Tags": [
+      "toyota",
+      "suv",
+      "4x4"
+    ],
+    "Location": "23,99",
+    "OwnerHistory": {},
+    "Views": 12,
+    "VehicleKey": "0`0",
+    "Info": "ABC",
+    "Year": 1999,
+    "Mileage": 45000,
+    "HasNatis": false,
+    "EstValue": 99,
+    "LicenseExpiry": "2015-02-11T15:01:00+07:00"
+  },
+  {
+    "ShortName": "Toyota Fortuner 2006",
+    "Profile": "cars",
+    "ImageKey": "0`0",
+    "OwnerKey": "0`0",
+    "Expires": "2015-02-11T15:01:00+07:00",
+    "Price": 230,
+    "Tags": [
+      "toyota",
+      "suv",
+      "4x4"
+    ],
+    "Location": "23,99",
+    "OwnerHistory": {},
+    "Views": 5,
+    "VehicleKey": "0`0",
+    "Info": "DEF",
+    "Year": 2006,
+    "Mileage": 45000,
+    "HasNatis": false,
+    "EstValue": 250,
+    "LicenseExpiry": "2015-02-11T15:01:00+07:00"
+  }
+]

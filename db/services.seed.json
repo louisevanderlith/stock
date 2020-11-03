@@ -1,7 +1,7 @@
 [
   {
     "ShortName": "Car Buyer",
-    "Profile": "mango",
+    "Profile": "www",
     "Url": "http://localhost:8105",
     "ImageKey": "0`0",
     "OwnerKey": "0`0",
@@ -14,7 +14,7 @@
   },
   {
     "ShortName": "Also a Car Buyer",
-    "Profile": "tango",
+    "Profile": "www",
     "Url": "http://localhost:8105",
     "ImageKey": "0`0",
     "OwnerKey": "0`0",
@@ -27,7 +27,7 @@
   },
   {
     "ShortName": "Profile Management",
-    "Profile": "tango",
+    "Profile": "www",
     "Url": "http://localhost:8107",
     "ImageKey": "0`0",
     "OwnerKey": "0`0",

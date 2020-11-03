@@ -4,15 +4,41 @@ import (
 	"github.com/louisevanderlith/husk/hsk"
 )
 
-type stockFilter func(obj StockItem) bool
+type carFilter func(obj Car) bool
 
-func (f stockFilter) Filter(obj hsk.Record) bool {
-	return f(obj.GetValue().(StockItem))
+func (f carFilter) Filter(obj hsk.Record) bool {
+	return f(obj.GetValue().(Car))
 }
 
 //byProfile filter will filter by stock Owner
-func byProfile(name string) stockFilter {
-	return func(obj StockItem) bool {
+func byCarProfile(name string) carFilter {
+	return func(obj Car) bool {
+		return obj.Profile == name
+	}
+}
+
+type partFilter func(obj Part) bool
+
+func (f partFilter) Filter(obj hsk.Record) bool {
+	return f(obj.GetValue().(Part))
+}
+
+//byProfile filter will filter by stock Owner
+func byPartProfile(name string) partFilter {
+	return func(obj Part) bool {
+		return obj.Profile == name
+	}
+}
+
+type propertyFilter func(obj Property) bool
+
+func (f propertyFilter) Filter(obj hsk.Record) bool {
+	return f(obj.GetValue().(Property))
+}
+
+//byProfile filter will filter by stock Owner
+func byPropertyProfile(name string) propertyFilter {
+	return func(obj Property) bool {
 		return obj.Profile == name
 	}
 }

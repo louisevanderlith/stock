@@ -2,8 +2,8 @@ package core
 
 import (
 	"github.com/louisevanderlith/husk/hsk"
+	"github.com/louisevanderlith/husk/keys"
 	"github.com/louisevanderlith/husk/validation"
-	"strings"
 	"time"
 
 	"errors"
@@ -11,7 +11,7 @@ import (
 
 type Car struct {
 	StockItem
-	VehicleKey    hsk.Key
+	VehicleKey    *keys.TimeKey
 	Info          string `hsk:"size(128)"`
 	Year          int    `orm:"null"`
 	Mileage       int    `orm:"null"`
@@ -21,34 +21,26 @@ type Car struct {
 }
 
 func (o Car) Valid() error {
-	var issues []string
-
 	err := validation.Struct(o)
 	if err != nil {
-		issues = append(issues, err.Error())
+		return err
 	}
 
 	if o.Year > 0 && o.Year > time.Now().Year() {
-		issues = append(issues, "Year can't be in the future.")
+		errors.New("year can't be in the future")
 	}
 
 	if o.Mileage < 0 {
-		issues = append(issues, "Mileage can't be negative.")
+		return errors.New("mileage can't be negative")
 	}
 
 	if o.HasNatis && o.LicenseExpiry.Before(time.Now()) {
-		issues = append(issues, "License has already expired.")
+		return errors.New("license has already expired")
 	}
 
 	//Price compare - Fair Price?
 	//Estimate Value should be populated with the Average price of the same types of vehicles.
-	if err := PriceInBounds(o.Price, o.EstValue); err != nil {
-		return err
-	}
-
-	finErr := errors.New(strings.Join(issues, "\r\n"))
-
-	return finErr
+	return PriceInBounds(o.Price, o.EstValue)
 }
 
 func (c Car) Create() (hsk.Key, error) {

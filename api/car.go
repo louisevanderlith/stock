@@ -6,6 +6,7 @@ import (
 	"github.com/louisevanderlith/husk/hsk"
 	"github.com/louisevanderlith/husk/records"
 	"github.com/louisevanderlith/stock/core"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -18,6 +19,11 @@ func FetchCar(web *http.Client, host string, k hsk.Key) (core.Car, error) {
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return core.Car{}, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
 
 	result := core.Car{}
 	dec := json.NewDecoder(resp.Body)
@@ -35,6 +41,11 @@ func FetchAllCars(web *http.Client, host, pagesize string) (records.Page, error)
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
 
 	result := records.NewResultPage(core.Car{})
 	dec := json.NewDecoder(resp.Body)

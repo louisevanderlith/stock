@@ -6,6 +6,7 @@ import (
 	"github.com/louisevanderlith/husk/hsk"
 	"github.com/louisevanderlith/husk/records"
 	"github.com/louisevanderlith/stock/core"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -18,6 +19,11 @@ func FetchPart(web *http.Client, host string, k hsk.Key) (core.Part, error) {
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return core.Part{}, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
 
 	result := core.Part{}
 	dec := json.NewDecoder(resp.Body)
@@ -35,6 +41,11 @@ func FetchAllParts(web *http.Client, host, pagesize string) (records.Page, error
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
 
 	result := records.NewResultPage(core.Part{})
 	dec := json.NewDecoder(resp.Body)

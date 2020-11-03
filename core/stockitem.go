@@ -10,8 +10,8 @@ import (
 type StockItem struct {
 	ShortName    string `hsk:"size(128)"`
 	Profile      string
-	ImageKey     keys.TimeKey
-	OwnerKey     keys.TimeKey //Hero
+	ImageKey     *keys.TimeKey
+	OwnerKey     *keys.TimeKey //Hero
 	Expires      time.Time
 	Price        int64 //coins can't be divided, OR LESS THAN ZERO
 	Tags         []string

@@ -11,12 +11,12 @@ func SetupRoutes(issuer, audience string) http.Handler {
 	r := mux.NewRouter()
 	mw := open.BearerMiddleware(audience, issuer)
 
-	r.Handle("/", mw.Handler(http.HandlerFunc(GetCategories))).Methods(http.MethodGet)
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCategory))).Methods(http.MethodGet)
-	r.Handle("/", mw.Handler(http.HandlerFunc(CreateCategory))).Methods(http.MethodPost)
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCategory))).Methods(http.MethodPut)
+	r.Handle("/info", mw.Handler(http.HandlerFunc(GetCategories))).Methods(http.MethodGet)
+	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCategory))).Methods(http.MethodGet)
+	r.Handle("/info", mw.Handler(http.HandlerFunc(CreateCategory))).Methods(http.MethodPost)
+	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCategory))).Methods(http.MethodPut)
 
-	//parts
+	//stock
 	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{itemkey:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewStock))).Methods(http.MethodGet)
 	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
 	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)

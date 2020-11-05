@@ -1,7 +1,7 @@
 import 'package:mango_ui/keys.dart';
 
 class StockItem {
-  final Key stockKey;
+  final Key itemKey;
   final String shortname;
   final Key imageKey;
   final Key ownerKey;
@@ -15,7 +15,7 @@ class StockItem {
   final Map<DateTime, Key> history;
 
   StockItem(
-      this.stockKey,
+      this.itemKey,
       this.shortname,
       this.imageKey,
       this.ownerKey,
@@ -30,7 +30,7 @@ class StockItem {
 
   Map<String, dynamic> toJson() {
     return {
-      "StockKey": stockKey,
+      "ItemKey": itemKey,
       "ImageKey": imageKey,
       "OwnerKey": ownerKey,
       "Expires": expires,

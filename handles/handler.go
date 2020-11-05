@@ -10,51 +10,18 @@ import (
 func SetupRoutes(issuer, audience string) http.Handler {
 	r := mux.NewRouter()
 	mw := open.BearerMiddleware(audience, issuer)
-	//cars
-	r.Handle("/cars", mw.Handler(http.HandlerFunc(GetCars))).Methods(http.MethodGet)
-	r.Handle("/cars/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCar))).Methods(http.MethodGet)
-	r.Handle("/cars/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchCars))).Methods(http.MethodGet)
-	r.Handle("/cars/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchCars))).Methods(http.MethodGet)
-	r.Handle("/cars", mw.Handler(http.HandlerFunc(CreateCar))).Methods(http.MethodPost)
-	r.Handle("/cars/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCar))).Methods(http.MethodPut)
 
-	//parts
-	r.Handle("/parts", mw.Handler(http.HandlerFunc(GetParts))).Methods(http.MethodGet)
-	r.Handle("/parts/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewPart))).Methods(http.MethodGet)
-	r.Handle("/parts/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchParts))).Methods(http.MethodGet)
-	r.Handle("/parts/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchParts))).Methods(http.MethodGet)
-	r.Handle("/parts", mw.Handler(http.HandlerFunc(CreatePart))).Methods(http.MethodPost)
-	r.Handle("/parts/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdatePart))).Methods(http.MethodPut)
+	r.Handle("/info", mw.Handler(http.HandlerFunc(GetCategories))).Methods(http.MethodGet)
+	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCategory))).Methods(http.MethodGet)
+	r.Handle("/info", mw.Handler(http.HandlerFunc(CreateCategory))).Methods(http.MethodPost)
+	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCategory))).Methods(http.MethodPut)
 
-	//properties
-	r.Handle("/properties", mw.Handler(http.HandlerFunc(GetProperties))).Methods(http.MethodGet)
-	r.Handle("/properties/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewProperty))).Methods(http.MethodGet)
-	r.Handle("/properties/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchProperties))).Methods(http.MethodGet)
-	r.Handle("/properties/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchProperties))).Methods(http.MethodGet)
-	r.Handle("/properties", mw.Handler(http.HandlerFunc(CreateProperty))).Methods(http.MethodPost)
-	r.Handle("/properties/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateProperty))).Methods(http.MethodPut)
-
-	//services
-	r.Handle("/services", mw.Handler(http.HandlerFunc(GetServices))).Methods(http.MethodGet)
-	r.Handle("/services/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewService))).Methods(http.MethodGet)
-	r.Handle("/services/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchServices))).Methods(http.MethodGet)
-	r.Handle("/services/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchServices))).Methods(http.MethodGet)
-	r.Handle("/services", mw.Handler(http.HandlerFunc(CreateService))).Methods(http.MethodPost)
-	r.Handle("/services/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateService))).Methods(http.MethodPut)
-
-	//clothing
-	r.Handle("/clothes", mw.Handler(http.HandlerFunc(GetClothing))).Methods(http.MethodGet)
-	r.Handle("/clothes/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewClothing))).Methods(http.MethodGet)
-	r.Handle("/clothes/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchClothing))).Methods(http.MethodGet)
-	r.Handle("/clothes/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchClothing))).Methods(http.MethodGet)
-	r.Handle("/clothes", mw.Handler(http.HandlerFunc(CreateClothing))).Methods(http.MethodPost)
-	r.Handle("/clothes/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateClothing))).Methods(http.MethodPut)
-
-	//lst, err := middle.Whitelist(http.DefaultClient, securityUrl, "stock.cars.search", scrt)
-
-	//if err != nil {
-	//	panic(err)
-	//}
+	//stock
+	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{itemkey:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewStock))).Methods(http.MethodGet)
+	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
+	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
+	r.Handle("/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(CreateStock))).Methods(http.MethodPost)
+	r.Handle("/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateStock))).Methods(http.MethodPatch)
 
 	corsOpts := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

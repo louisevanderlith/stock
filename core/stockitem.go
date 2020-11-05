@@ -8,18 +8,26 @@ import (
 )
 
 type StockItem struct {
-	ShortName    string `hsk:"size(128)"`
-	Profile      string
-	ImageKey     *keys.TimeKey
-	OwnerKey     *keys.TimeKey //Hero
-	Expires      time.Time
-	Price        int64 //coins can't be divided, OR LESS THAN ZERO
-	Tags         []string
-	Location     string `hsk:"size(128)"`
-	OwnerHistory map[time.Time]hsk.Key
-	Views        int64 `hsk:"null"`
+	ItemKey       *keys.TimeKey
+	ShortName     string `hsk:"size(128)"`
+	ImageKey      *keys.TimeKey
+	OwnerKey      *keys.TimeKey //Hero
+	Expires       time.Time
+	Currency      string
+	Price         float32
+	EstimateValue float32
+	Tags          []string
+	Location      string `hsk:"size(128)"`
+	OwnerHistory  map[time.Time]hsk.Key
+	Views         int64 `hsk:"null"`
 }
 
 func (s StockItem) Valid() error {
-	return validation.Struct(s)
+	err := validation.Struct(s)
+
+	if err != nil {
+		return err
+	}
+
+	return PriceInBounds(s.Price, s.EstimateValue)
 }

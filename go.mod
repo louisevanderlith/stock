@@ -1,7 +1,6 @@
 module github.com/louisevanderlith/stock
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gorilla/mux v1.7.4
 	github.com/louisevanderlith/droxolite v1.16.7
 	github.com/louisevanderlith/husk v1.7.6

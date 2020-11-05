@@ -29,25 +29,25 @@ Future<HttpRequest> deleteCategory(Key key) async {
   return invokeService("DELETE", url, "");
 }
 
-Future<HttpRequest> createStock(Key categoryKey, StockItem obj) async {
+Future<HttpRequest> createStock(String category, StockItem obj) async {
   var apiroute = getEndpoint("stock");
-  var url = "${apiroute}/${categoryKey.toJson()}";
+  var url = "${apiroute}/${category}";
 
   return invokeService("POST", url, jsonEncode(obj.toJson()));
 }
 
-Future<HttpRequest> updateStock(Key categoryKey, Key key, StockItem obj) async {
+Future<HttpRequest> updateStock(String category, Key key, StockItem obj) async {
   var route = getEndpoint("stock");
-  var url = "${route}/${categoryKey.toJson()}/${key.toJson()}";
+  var url = "${route}/${category}/${key.toJson()}";
 
   final data = jsonEncode(obj.toJson());
 
   return invokeService("PUT", url, data);
 }
 
-Future<HttpRequest> deleteStock(Key categoryKey, Key key) async {
+Future<HttpRequest> deleteStock(String category, Key key) async {
   var route = getEndpoint("stock");
-  var url = "${route}/${categoryKey.toJson()}/${key.toJson()}";
+  var url = "${route}/${category}/${key.toJson()}";
 
   return invokeService("DELETE", url, "");
 }

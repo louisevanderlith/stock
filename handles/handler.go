@@ -17,11 +17,11 @@ func SetupRoutes(issuer, audience string) http.Handler {
 	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCategory))).Methods(http.MethodPut)
 
 	//stock
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{itemkey:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewStock))).Methods(http.MethodGet)
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(CreateStock))).Methods(http.MethodPost)
-	r.Handle("/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateStock))).Methods(http.MethodPatch)
+	r.Handle("/{category:[a-zA-Z]+}/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewStock))).Methods(http.MethodGet)
+	r.Handle("/{category:[a-zA-Z]+}/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
+	r.Handle("/{category:[a-zA-Z]+}/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", mw.Handler(http.HandlerFunc(SearchStock))).Methods(http.MethodGet)
+	r.Handle("/{category:[a-zA-Z]+}", mw.Handler(http.HandlerFunc(CreateStock))).Methods(http.MethodPost)
+	r.Handle("/{category:[a-zA-Z]+}", mw.Handler(http.HandlerFunc(UpdateStock))).Methods(http.MethodPut)
 
 	corsOpts := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

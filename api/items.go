@@ -54,8 +54,8 @@ func FetchAllCategories(web *http.Client, host, pagesize string) (records.Page, 
 	return result, err
 }
 
-func FetchStockItem(web *http.Client, host string, categoryKey, k hsk.Key) (core.StockItem, error) {
-	url := fmt.Sprintf("%s/%s/%s", host, k.String(), k.String())
+func FetchStockItem(web *http.Client, host string, category string, k hsk.Key) (core.StockItem, error) {
+	url := fmt.Sprintf("%s/%s/%s", host, category, k.String())
 	resp, err := web.Get(url)
 
 	if err != nil {
@@ -76,8 +76,8 @@ func FetchStockItem(web *http.Client, host string, categoryKey, k hsk.Key) (core
 	return result, err
 }
 
-func FetchAllSpares(web *http.Client, host string, categoryKey hsk.Key, pagesize string) (records.Page, error) {
-	url := fmt.Sprintf("%s/%s/%s", host, categoryKey.String(), pagesize)
+func FetchCategoryItems(web *http.Client, host string, category, pagesize string) (records.Page, error) {
+	url := fmt.Sprintf("%s/%s/%s", host, category, pagesize)
 	resp, err := web.Get(url)
 
 	if err != nil {

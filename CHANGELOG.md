@@ -1,5 +1,9 @@
 ## Mango-Stock
 
+# 1.0.3
+
+* Stock Items use Category name instead of Key
+
 # 1.0.2
 
 * Moved Categories to their own APIs

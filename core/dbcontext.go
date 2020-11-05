@@ -11,11 +11,11 @@ import (
 type StockContext interface {
 	GetClientItems(page, size int, clientid string) (records.Page, error)
 	GetOwnerItems(page, size int, owner hsk.Key) (records.Page, error)
-	GetStock(categoryKey, itemKey hsk.Key) (StockItem, error)
+	GetStock(category string, itemKey hsk.Key) (StockItem, error)
 	FindStock(page, size int, category string) (records.Page, error)
 	FindStockCategory(page, size int, categoryKey hsk.Key) (records.Page, error)
-	CreateStock(categoryKey hsk.Key, obj StockItem) (hsk.Key, error)
-	UpdateStock(categoryKey hsk.Key, obj StockItem) error
+	CreateStock(category string, obj StockItem) (hsk.Key, error)
+	UpdateStock(category string, obj StockItem) error
 	ListCategories() (records.Page, error)
 	GetCategory(k hsk.Key) (hsk.Record, error)
 	CreateCategory(obj Category) (hsk.Key, error)
@@ -26,8 +26,8 @@ type context struct {
 	Categories husk.Table
 }
 
-func (c context) GetStock(categoryKey, itemKey hsk.Key) (StockItem, error) {
-	rec, err := c.Categories.FindByKey(categoryKey)
+func (c context) GetStock(category string, itemKey hsk.Key) (StockItem, error) {
+	rec, err := c.Categories.FindFirst(byName(category))
 
 	if err != nil {
 		return StockItem{}, err
@@ -87,8 +87,8 @@ func (c context) FindStockCategory(page, size int, categoryKey hsk.Key) (records
 	return result, nil
 }
 
-func (c context) CreateStock(categoryKey hsk.Key, obj StockItem) (hsk.Key, error) {
-	rec, err := c.Categories.FindByKey(categoryKey)
+func (c context) CreateStock(category string, obj StockItem) (hsk.Key, error) {
+	rec, err := c.Categories.FindFirst(byName(category))
 
 	if err != nil {
 		return nil, err
@@ -108,13 +108,13 @@ func (c context) CreateStock(categoryKey hsk.Key, obj StockItem) (hsk.Key, error
 
 	val.Items = append(val.Items, obj)
 
-	err = c.Categories.Update(categoryKey, val)
+	err = c.Categories.Update(rec.GetKey(), val)
 
-	return categoryKey, err
+	return rec.GetKey(), err
 }
 
-func (c context) UpdateStock(categoryKey hsk.Key, obj StockItem) error {
-	rec, err := c.Categories.FindByKey(categoryKey)
+func (c context) UpdateStock(category string, obj StockItem) error {
+	rec, err := c.Categories.FindFirst(byName(category))
 
 	if err != nil {
 		return err
@@ -134,7 +134,7 @@ func (c context) UpdateStock(categoryKey hsk.Key, obj StockItem) error {
 
 	val.Items[idx] = obj
 
-	return c.Categories.Update(categoryKey, val)
+	return c.Categories.Update(rec.GetKey(), val)
 }
 
 func (c context) ListCategories() (records.Page, error) {

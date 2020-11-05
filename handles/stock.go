@@ -22,6 +22,13 @@ func SearchStock(w http.ResponseWriter, r *http.Request) {
 }
 
 func ViewStock(w http.ResponseWriter, r *http.Request) {
+	cat := drx.FindParam(r, "category")
+
+	if len(cat) == 0 {
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+
 	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
@@ -30,15 +37,7 @@ func ViewStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	itmkey, err := keys.ParseKey(drx.FindParam(r, "itemkey"))
-
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-
-	rec, err := core.Context().GetStock(key, itmkey)
+	rec, err := core.Context().GetStock(cat, key)
 
 	if err != nil {
 		log.Println("Get Stock Error", err)
@@ -54,17 +53,16 @@ func ViewStock(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateStock(w http.ResponseWriter, r *http.Request) {
-	key, err := keys.ParseKey(drx.FindParam(r, "key"))
+	cat := drx.FindParam(r, "category")
 
-	if err != nil {
-		log.Println(err)
+	if len(cat) == 0 {
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 
 	obj := core.StockItem{}
 
-	err = drx.JSONBody(r, &obj)
+	err := drx.JSONBody(r, &obj)
 
 	if err != nil {
 		log.Println(err)
@@ -72,7 +70,7 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := core.Context().CreateStock(key, obj)
+	result, err := core.Context().CreateStock(cat, obj)
 
 	if err != nil {
 		log.Println(err)
@@ -89,16 +87,15 @@ func CreateStock(w http.ResponseWriter, r *http.Request) {
 
 //Uses category & itemkey
 func UpdateStock(w http.ResponseWriter, r *http.Request) {
-	key, err := keys.ParseKey(drx.FindParam(r, "key"))
+	cat := drx.FindParam(r, "category")
 
-	if err != nil {
-		log.Println(err)
+	if len(cat) == 0 {
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 
 	obj := core.StockItem{}
-	err = drx.JSONBody(r, &obj)
+	err := drx.JSONBody(r, &obj)
 
 	if err != nil {
 		log.Println(err)
@@ -106,7 +103,7 @@ func UpdateStock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = core.Context().UpdateStock(key, obj)
+	err = core.Context().UpdateStock(cat, obj)
 
 	if err != nil {
 		log.Println("Update Vehicle Error", err)

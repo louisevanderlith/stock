@@ -1,22 +1,27 @@
 package core
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/louisevanderlith/husk"
+	"github.com/louisevanderlith/husk/collections"
 	"github.com/louisevanderlith/husk/hsk"
 	"github.com/louisevanderlith/husk/op"
 	"github.com/louisevanderlith/husk/records"
+	"os"
+	"reflect"
 )
 
 type StockContext interface {
-	GetClientItems(page, size int, clientid string) (records.Page, error)
+	ListCategories(page, size int) (records.Page, error)
+	ListClientCategories(page, size int, clientId string) (records.Page, error)
+
 	GetOwnerItems(page, size int, owner hsk.Key) (records.Page, error)
 	GetStock(category string, itemKey hsk.Key) (StockItem, error)
 	FindStock(page, size int, category string) (records.Page, error)
 	FindStockCategory(page, size int, categoryKey hsk.Key) (records.Page, error)
 	CreateStock(category string, obj StockItem) (hsk.Key, error)
 	UpdateStock(category string, obj StockItem) error
-	ListCategories() (records.Page, error)
 	GetCategory(k hsk.Key) (hsk.Record, error)
 	CreateCategory(obj Category) (hsk.Key, error)
 	UpdateCategory(k hsk.Key, obj Category) error
@@ -137,8 +142,8 @@ func (c context) UpdateStock(category string, obj StockItem) error {
 	return c.Categories.Update(rec.GetKey(), val)
 }
 
-func (c context) ListCategories() (records.Page, error) {
-	return c.Categories.Find(1, 10, op.Everything())
+func (c context) ListCategories(page, size int) (records.Page, error) {
+	return c.Categories.Find(page, size, op.Everything())
 }
 
 func (c context) GetCategory(k hsk.Key) (hsk.Record, error) {
@@ -153,7 +158,7 @@ func (c context) UpdateCategory(k hsk.Key, obj Category) error {
 	return c.Categories.Update(k, obj)
 }
 
-func (c context) GetClientItems(page, size int, clientid string) (records.Page, error) {
+func (c context) ListClientCategories(page, size int, clientid string) (records.Page, error) {
 	return c.Categories.Find(page, size, byClient(clientid))
 }
 
@@ -171,6 +176,40 @@ func CreateContext() {
 	ctx = context{
 		Categories: husk.NewTable(Category{}),
 	}
+
+	seed()
+}
+
+func seed() {
+	coll, err := categorySeeds()
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = ctx.Categories.Seed(coll)
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func categorySeeds() (collections.Enumerable, error) {
+	f, err := os.Open("db/categories.seed.json")
+
+	if err != nil {
+		return nil, err
+	}
+
+	var items []Category
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&items)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return collections.ReadOnlyList(reflect.ValueOf(items)), nil
 }
 
 func Shutdown() {

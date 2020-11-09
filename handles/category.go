@@ -10,12 +10,35 @@ import (
 )
 
 func GetCategories(w http.ResponseWriter, r *http.Request) {
-	result, err := core.Context().ListCategories()
+	result, err := core.Context().ListCategories(1, 10)
+
+	if err != nil {
+		log.Println("Get Categories Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
 
 	err = mix.Write(w, mix.JSON(result))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Serve Error", err)
+	}
+}
+
+func SearchCategories(w http.ResponseWriter, r *http.Request) {
+	page, size := drx.GetPageData(r)
+	result, err := core.Context().ListCategories(page, size)
+
+	if err != nil {
+		log.Println("Search Categories Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(result))
+
+	if err != nil {
+		log.Println("Serve Error", err)
 	}
 }
 
@@ -23,7 +46,7 @@ func ViewCategory(w http.ResponseWriter, r *http.Request) {
 	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Parse Error", err)
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}

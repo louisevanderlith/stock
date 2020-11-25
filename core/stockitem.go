@@ -20,6 +20,7 @@ type StockItem struct {
 	Location      string `hsk:"size(128)"`
 	OwnerHistory  map[time.Time]hsk.Key
 	Views         int64 `hsk:"null"`
+	Quantity      int   `hsk:"null"` //TODO: Make ItemKey a slice, count len(itemkey) for qty
 }
 
 func (s StockItem) Valid() error {

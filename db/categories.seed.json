@@ -1,0 +1,44 @@
+[
+  {
+    "Name": "development",
+    "Text": "Software Development",
+    "Description": "Services we Provide",
+    "ClientID": "www",
+    "ImageKey": "0`0",
+    "Items": [
+      {
+        "ItemKey": "0`0",
+        "ShortName": "HTML Pages",
+        "ImageKey": "0`0",
+        "OwnerKey": "0`0",
+        "Expires": "2025-01-02T15:04:05+02:00",
+        "Currency": "ZAR",
+        "Price": 85,
+        "EstimateValue": 90,
+        "Tags": [
+          "software",
+          "html"
+        ],
+        "Location": "some place",
+        "OwnerHistory": {},
+        "Views": 0
+      }
+    ]
+  },
+  {
+    "Name": "cars",
+    "Text": "Second hand cars",
+    "Description": "Buy and Sell cars",
+    "ClientID": "shop",
+    "ImageKey": "0`0",
+    "Items": []
+  },
+  {
+    "Name": "services",
+    "Text": "Services",
+    "Description": "Services we Provide",
+    "ClientID": "shop",
+    "ImageKey": "0`0",
+    "Items": []
+  }
+]

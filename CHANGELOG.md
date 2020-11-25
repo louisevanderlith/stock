@@ -1,5 +1,9 @@
 ## Mango-Stock
 
+# 1.0.4
+
+* Added BaseCategory field
+
 # 1.0.3
 
 * Stock Items use Category name instead of Key

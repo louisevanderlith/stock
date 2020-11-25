@@ -5,15 +5,17 @@ import (
 	"github.com/louisevanderlith/husk/hsk"
 	"github.com/louisevanderlith/husk/keys"
 	"github.com/louisevanderlith/husk/validation"
+	"github.com/louisevanderlith/stock/core/categories"
 )
 
 type Category struct {
-	Name        string
-	Text        string
-	Description string
-	ClientID    string
-	ImageKey    *keys.TimeKey
-	Items       []StockItem
+	Name         string
+	Text         string
+	Description  string
+	BaseCategory categories.Enum
+	ClientID     string
+	ImageKey     *keys.TimeKey
+	Items        []StockItem
 }
 
 func (c Category) Valid() error {

@@ -12,6 +12,7 @@ func SetupRoutes(issuer, audience string) http.Handler {
 	mw := open.BearerMiddleware(audience, issuer)
 
 	r.Handle("/info", mw.Handler(http.HandlerFunc(GetCategories))).Methods(http.MethodGet)
+	r.Handle("/info/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchCategories))).Methods(http.MethodGet)
 	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCategory))).Methods(http.MethodGet)
 	r.Handle("/info", mw.Handler(http.HandlerFunc(CreateCategory))).Methods(http.MethodPost)
 	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(UpdateCategory))).Methods(http.MethodPut)

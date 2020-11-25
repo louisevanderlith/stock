@@ -3,6 +3,8 @@
     "Name": "development",
     "Text": "Software Development",
     "Description": "Services we Provide",
+    "PageURL": "some.where.com",
+    "BaseCategory": 5,
     "ClientID": "www",
     "ImageKey": "0`0",
     "Items": [
@@ -29,6 +31,8 @@
     "Name": "cars",
     "Text": "Second hand cars",
     "Description": "Buy and Sell cars",
+    "PageURL": "some.where-else.com",
+    "BaseCategory": 1,
     "ClientID": "shop",
     "ImageKey": "0`0",
     "Items": []
@@ -37,6 +41,8 @@
     "Name": "services",
     "Text": "Services",
     "Description": "Services we Provide",
+    "PageURL": "some.where.com",
+    "BaseCategory": 5,
     "ClientID": "shop",
     "ImageKey": "0`0",
     "Items": []

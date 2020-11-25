@@ -12,6 +12,7 @@ type Category struct {
 	Name         string
 	Text         string
 	Description  string
+	PageURL      string
 	BaseCategory categories.Enum
 	ClientID     string
 	ImageKey     *keys.TimeKey

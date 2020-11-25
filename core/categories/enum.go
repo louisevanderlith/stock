@@ -2,10 +2,11 @@ package categories
 
 import "strings"
 
-type Enum int
+type Enum = int
 
 const (
-	Cars Enum = iota
+	None Enum = iota
+	Cars
 	Clothing
 	Spares
 	Properties
@@ -22,7 +23,7 @@ var vals = [...]string{
 	"Tokens",
 }
 
-func (r Enum) String() string {
+func StringEnum(r Enum) string {
 	return vals[r]
 }
 

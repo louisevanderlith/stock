@@ -15,6 +15,7 @@ const (
 )
 
 var vals = [...]string{
+	"None",
 	"Cars",
 	"Clothing",
 	"Spares",

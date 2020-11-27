@@ -54,6 +54,28 @@ func FetchAllCategories(web *http.Client, host, pagesize string) (records.Page, 
 	return result, err
 }
 
+func FetchClientCategories(web *http.Client, host, pagesize string) (records.Page, error) {
+	url := fmt.Sprintf("%s/categories/%s", host, pagesize)
+	resp, err := web.Get(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bdy, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+	}
+
+	result := records.NewResultPage(core.Category{})
+	dec := json.NewDecoder(resp.Body)
+	err = dec.Decode(&result)
+
+	return result, err
+}
+
 func FetchStockItem(web *http.Client, host string, category string, k hsk.Key) (core.StockItem, error) {
 	url := fmt.Sprintf("%s/%s/%s", host, category, k.String())
 	resp, err := web.Get(url)

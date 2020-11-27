@@ -11,6 +11,9 @@ func SetupRoutes(issuer, audience string) http.Handler {
 	r := mux.NewRouter()
 	mw := open.BearerMiddleware(audience, issuer)
 
+	r.Handle("/categories", mw.Handler(http.HandlerFunc(GetClientCategories))).Methods(http.MethodGet)
+	r.Handle("/categories/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchClientCategories))).Methods(http.MethodGet)
+
 	r.Handle("/info", mw.Handler(http.HandlerFunc(GetCategories))).Methods(http.MethodGet)
 	r.Handle("/info/{pagesize:[A-Z][0-9]+}", mw.Handler(http.HandlerFunc(SearchCategories))).Methods(http.MethodGet)
 	r.Handle("/info/{key:[0-9]+\\x60[0-9]+}", mw.Handler(http.HandlerFunc(ViewCategory))).Methods(http.MethodGet)

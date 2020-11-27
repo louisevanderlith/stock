@@ -1,5 +1,9 @@
 ## Mango-Stock
 
+# 1.0.6
+
+* Added Quantity field
+
 # 1.0.5
 
 * Added PageURL field

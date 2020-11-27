@@ -13,6 +13,7 @@ class StockItem {
   final String location;
   final int views;
   final Map<DateTime, Key> history;
+  final int quantity;
 
   StockItem(
       this.itemKey,
@@ -26,7 +27,8 @@ class StockItem {
       this.tags,
       this.location,
       this.views,
-      this.history);
+      this.history,
+      this.quantity);
 
   Map<String, dynamic> toJson() {
     return {
@@ -42,6 +44,7 @@ class StockItem {
       "EstimateValue": estimate,
       "Currency": currency,
       "ShortName": shortname,
+      "Quantity": quantity
     };
   }
 }

@@ -1,6 +1,7 @@
 package handles
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"github.com/louisevanderlith/droxolite/drx"
 	"github.com/louisevanderlith/droxolite/mix"
 	"github.com/louisevanderlith/husk/keys"
@@ -28,6 +29,45 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 func SearchCategories(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
 	result, err := core.Context().ListCategories(page, size)
+
+	if err != nil {
+		log.Println("Search Categories Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(result))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func GetClientCategories(w http.ResponseWriter, r *http.Request) {
+	usr := r.Context().Value("user").(*jwt.Token)
+	claims := usr.Claims.(jwt.MapClaims)
+	log.Println("Claims", claims)
+	result, err := core.Context().ListClientCategories(1, 10, claims["client_id"].(string))
+
+	if err != nil {
+		log.Println("Get Categories Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(result))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func SearchClientCategories(w http.ResponseWriter, r *http.Request) {
+	page, size := drx.GetPageData(r)
+	usr := r.Context().Value("user").(*jwt.Token)
+	claims := usr.Claims.(jwt.MapClaims)
+	log.Println("Claims", claims)
+	result, err := core.Context().ListClientCategories(page, size, claims["client_id"].(string))
 
 	if err != nil {
 		log.Println("Search Categories Error", err)

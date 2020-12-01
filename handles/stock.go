@@ -106,8 +106,8 @@ func UpdateStock(w http.ResponseWriter, r *http.Request) {
 	err = core.Context().UpdateStock(cat, obj)
 
 	if err != nil {
-		log.Println("Update Vehicle Error", err)
-		http.Error(w, "", http.StatusNotFound)
+		log.Println("Update Stock Error", err)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 

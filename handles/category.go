@@ -66,8 +66,8 @@ func SearchClientCategories(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
 	usr := r.Context().Value("user").(*jwt.Token)
 	claims := usr.Claims.(jwt.MapClaims)
-	log.Println("Claims", claims)
-	result, err := core.Context().ListClientCategories(page, size, claims["client_id"].(string))
+
+	result, err := core.Context().ListClientCategories(page, size, claims["clientId"].(string))
 
 	if err != nil {
 		log.Println("Search Categories Error", err)
@@ -153,8 +153,8 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	err = core.Context().UpdateCategory(key, obj)
 
 	if err != nil {
-		log.Println("Update Vehicle Error", err)
-		http.Error(w, "", http.StatusNotFound)
+		log.Println("Update Category Error", err)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 

@@ -22,7 +22,7 @@ class Category {
       "PageURL": pageUrl,
       "BaseCategory": baseCategory,
       "ClientID": clientID,
-      "ImageKey": imageKey,
+      "ImageKey": imageKey.toJson(),
       "Items": items,
     };
   }

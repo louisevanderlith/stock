@@ -1,5 +1,9 @@
 ## Mango-Stock
 
+# 1.0.8
+
+* Added Unit tests for Json encoding
+
 # 1.0.7
 
 * Added missing Name field

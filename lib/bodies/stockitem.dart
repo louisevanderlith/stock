@@ -35,7 +35,7 @@ class StockItem {
       "ItemKey": itemKey,
       "ImageKey": imageKey,
       "OwnerKey": ownerKey,
-      "Expires": expires,
+      "Expires": expires.toIso8601String(),
       "Price": price,
       "Tags": tags,
       "Location": location,

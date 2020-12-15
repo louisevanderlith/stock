@@ -46,8 +46,8 @@ func SearchCategories(w http.ResponseWriter, r *http.Request) {
 func GetClientCategories(w http.ResponseWriter, r *http.Request) {
 	usr := r.Context().Value("user").(*jwt.Token)
 	claims := usr.Claims.(jwt.MapClaims)
-	log.Println("Claims", claims)
-	result, err := core.Context().ListClientCategories(1, 10, claims["client_id"].(string))
+
+	result, err := core.Context().ListClientCategories(1, 10, claims["clientId"].(string))
 
 	if err != nil {
 		log.Println("Get Categories Error", err)

@@ -1,5 +1,12 @@
 ## Mango-Stock
 
+# 1.1.1
+
+* StockItem renamed to Product
+* Moved Products to own table
+* Fields updated
+* Added search to API
+
 # 1.0.8
 
 * Added Unit tests for Json encoding

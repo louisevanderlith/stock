@@ -1,7 +1,5 @@
 import 'package:mango_ui/keys.dart';
 
-import 'stockitem.dart';
-
 class Category {
   final String name;
   final String text;
@@ -10,9 +8,10 @@ class Category {
   final num baseCategory;
   final String clientID;
   final Key imageKey;
-  final List<StockItem> items;
+  final Key ownerKey;
 
-  Category(this.name, this.text, this.description, this.pageUrl, this.baseCategory, this.clientID, this.imageKey, this.items);
+  Category(this.name, this.text, this.description, this.pageUrl,
+      this.baseCategory, this.clientID, this.imageKey, this.ownerKey);
 
   Map<String, dynamic> toJson() {
     return {
@@ -23,7 +22,7 @@ class Category {
       "BaseCategory": baseCategory,
       "ClientID": clientID,
       "ImageKey": imageKey.toJson(),
-      "Items": items,
+      "OwnerKey": ownerKey.toJson(),
     };
   }
 }

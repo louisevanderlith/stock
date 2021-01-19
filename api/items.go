@@ -10,95 +10,29 @@ import (
 	"net/http"
 )
 
-func FetchCategory(web *http.Client, host string, k hsk.Key) (core.Category, error) {
-	url := fmt.Sprintf("%s/info/%s", host, k.String())
-	resp, err := web.Get(url)
-
-	if err != nil {
-		return core.Category{}, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		bdy, _ := ioutil.ReadAll(resp.Body)
-		return core.Category{}, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
-	}
-
-	result := core.Category{}
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&result)
-
-	return result, err
-}
-
-func FetchAllCategories(web *http.Client, host, pagesize string) (records.Page, error) {
-	url := fmt.Sprintf("%s/info/%s", host, pagesize)
-	resp, err := web.Get(url)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		bdy, _ := ioutil.ReadAll(resp.Body)
-		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
-	}
-
-	result := records.NewResultPage(core.Category{})
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&result)
-
-	return result, err
-}
-
-func FetchClientCategories(web *http.Client, host, pagesize string) (records.Page, error) {
-	url := fmt.Sprintf("%s/categories/%s", host, pagesize)
-	resp, err := web.Get(url)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		bdy, _ := ioutil.ReadAll(resp.Body)
-		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
-	}
-
-	result := records.NewResultPage(core.Category{})
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&result)
-
-	return result, err
-}
-
-func FetchStockItem(web *http.Client, host string, category string, k hsk.Key) (core.StockItem, error) {
+func FetchStockItem(web *http.Client, host string, category string, k hsk.Key) (core.Product, error) {
 	url := fmt.Sprintf("%s/%s/%s", host, category, k.String())
 	resp, err := web.Get(url)
 
 	if err != nil {
-		return core.StockItem{}, err
+		return core.Product{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		bdy, _ := ioutil.ReadAll(resp.Body)
-		return core.StockItem{}, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
+		return core.Product{}, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
 	}
 
-	result := core.StockItem{}
+	result := core.Product{}
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&result)
 
 	return result, err
 }
 
-func FetchCategoryItems(web *http.Client, host string, category, pagesize string) (records.Page, error) {
+func FetchCategoryItems(web *http.Client, host, category, pagesize string) (records.Page, error) {
 	url := fmt.Sprintf("%s/%s/%s", host, category, pagesize)
 	resp, err := web.Get(url)
 
@@ -113,7 +47,7 @@ func FetchCategoryItems(web *http.Client, host string, category, pagesize string
 		return nil, fmt.Errorf("%v: %s", resp.StatusCode, string(bdy))
 	}
 
-	result := records.NewResultPage(core.StockItem{})
+	result := records.NewResultPage(core.Product{})
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&result)
 

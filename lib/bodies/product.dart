@@ -1,10 +1,10 @@
 import 'package:mango_ui/keys.dart';
 
-class StockItem {
-  final Key itemKey;
+class Product {
+  final Key categoryKey;
+  final List<Key> itemKeys;
   final String shortname;
   final Key imageKey;
-  final Key ownerKey;
   final DateTime expires;
   final String currency;
   final double price;
@@ -12,39 +12,33 @@ class StockItem {
   final List<String> tags;
   final String location;
   final int views;
-  final Map<DateTime, Key> history;
-  final int quantity;
 
-  StockItem(
-      this.itemKey,
+  Product(
+      this.categoryKey,
+      this.itemKeys,
       this.shortname,
       this.imageKey,
-      this.ownerKey,
       this.expires,
       this.currency,
       this.price,
       this.estimate,
       this.tags,
       this.location,
-      this.views,
-      this.history,
-      this.quantity);
+      this.views);
 
   Map<String, dynamic> toJson() {
     return {
-      "ItemKey": itemKey,
+      "CategoryKey": categoryKey,
+      "ItemKeys": itemKeys,
       "ImageKey": imageKey,
-      "OwnerKey": ownerKey,
       "Expires": expires.toIso8601String(),
       "Price": price,
       "Tags": tags,
       "Location": location,
       "Views": views,
-      "OwnerHistory": history,
       "EstimateValue": estimate,
       "Currency": currency,
       "ShortName": shortname,
-      "Quantity": quantity
     };
   }
 }

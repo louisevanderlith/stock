@@ -1,18 +1,15 @@
 import 'dart:convert';
 
 import 'package:mango_stock/bodies/category.dart';
-import 'package:mango_stock/bodies/stockitem.dart';
+import 'package:mango_stock/bodies/product.dart';
 import 'package:mango_ui/keys.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("Category", () {
     test("toJson single object", () {
-      final items = new List<StockItem>();
-      items.add(FakeItem());
-
       final obj = new Category("test", "some text", " the description",
-          "http://some.where.com", 0, "www", new Key("0`0"), items);
+          "http://some.where.com", 0, "www", new Key("0`0"), new Key("0`0"));
 
       final actual = jsonEncode(obj);
       final match =
@@ -33,7 +30,7 @@ void main() {
     });
 
     test("toJson list", () {
-      final lst = new List<StockItem>();
+      final lst = new List<Product>();
       lst.add(FakeItem());
 
       final actual = jsonEncode(lst);
@@ -45,18 +42,19 @@ void main() {
   });
 }
 
-StockItem FakeItem() {
-  var itemKey = new Key("0`0");
+Product FakeItem() {
+  var categoryKey = new Key("0`0");
+  var itemKeys = new List<Key>();
+  itemKeys.add(new Key("0`0"));
+
   var shortname = "ShortName";
   var imageKey = new Key("0`0");
-  var ownerKey = new Key("0`0");
   var expires = new DateTime(2020, 06, 06);
   var currency = "ZAR";
   num price = 10;
   num estimate = 15;
   var tags = ["tag", "tag"];
   var location = "Somewhere";
-  var history = new Map<DateTime, Key>();
-  return new StockItem(itemKey, shortname, imageKey, ownerKey, expires,
-      currency, price, estimate, tags, location, 0, history, 1);
+  return new Product(categoryKey, itemKeys, shortname, imageKey, expires,
+      currency, price, estimate, tags, location, 0);
 }

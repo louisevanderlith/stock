@@ -11,57 +11,7 @@ import (
 	"net/http"
 )
 
-func GetCategories(w http.ResponseWriter, r *http.Request) {
-	result, err := core.Context().ListCategories(1, 10)
-
-	if err != nil {
-		log.Println("Get Categories Error", err)
-		http.Error(w, "", http.StatusNotFound)
-		return
-	}
-
-	err = mix.Write(w, mix.JSON(result))
-
-	if err != nil {
-		log.Println("Serve Error", err)
-	}
-}
-
-func SearchCategories(w http.ResponseWriter, r *http.Request) {
-	page, size := drx.GetPageData(r)
-	hsh, err := base64.URLEncoding.DecodeString(drx.FindParam(r, "hash"))
-
-	if err != nil {
-		log.Println("Hash Error", err)
-		http.Error(w, "", http.StatusInternalServerError)
-		return
-	}
-
-	in := core.Category{}
-	err = json.Unmarshal(hsh, &in)
-
-	if err != nil {
-		log.Println("Hash Bind Error", err)
-		http.Error(w, "", http.StatusInternalServerError)
-		return
-	}
-
-	result, err := core.Context().SearchCategories(page, size, in)
-
-	if err != nil {
-		log.Println("Search Categories Error", err)
-		http.Error(w, "", http.StatusNotFound)
-		return
-	}
-
-	err = mix.Write(w, mix.JSON(result))
-
-	if err != nil {
-		log.Println("Serve Error", err)
-	}
-}
-
-func ViewCategory(w http.ResponseWriter, r *http.Request) {
+func ViewProduct(w http.ResponseWriter, r *http.Request) {
 	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
@@ -70,7 +20,7 @@ func ViewCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rec, err := core.Context().GetCategory(key)
+	rec, err := core.Context().GetProduct(key)
 
 	if err != nil {
 		log.Println("Get Category Error", err)
@@ -85,8 +35,42 @@ func ViewCategory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func CreateCategory(w http.ResponseWriter, r *http.Request) {
-	obj := core.Category{}
+func SearchProducts(w http.ResponseWriter, r *http.Request) {
+	page, size := drx.GetPageData(r)
+	hsh, err := base64.URLEncoding.DecodeString(drx.FindParam(r, "hash"))
+
+	if err != nil {
+		log.Println("Hash Error", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	in := core.Product{}
+	err = json.Unmarshal(hsh, &in)
+
+	if err != nil {
+		log.Println("Hash Bind Error", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+
+	result, err := core.Context().SearchProducts(page, size, in)
+
+	if err != nil {
+		log.Println("Search Products Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(result))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func CreateProduct(w http.ResponseWriter, r *http.Request) {
+	obj := core.Product{}
 
 	err := drx.JSONBody(r, &obj)
 
@@ -96,10 +80,10 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := core.Context().CreateCategory(obj)
+	result, err := core.Context().CreateProduct(obj)
 
 	if err != nil {
-		log.Println("Create Category Error", err)
+		log.Println("Create Product Error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -111,7 +95,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func UpdateCategory(w http.ResponseWriter, r *http.Request) {
+func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	key, err := keys.ParseKey(drx.FindParam(r, "key"))
 
 	if err != nil {
@@ -120,7 +104,7 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	obj := core.Category{}
+	obj := core.Product{}
 	err = drx.JSONBody(r, &obj)
 
 	if err != nil {
@@ -129,10 +113,10 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = core.Context().UpdateCategory(key, obj)
+	err = core.Context().UpdateProduct(key, obj)
 
 	if err != nil {
-		log.Println("Update Category Error", err)
+		log.Println("Update Product Error", err)
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}

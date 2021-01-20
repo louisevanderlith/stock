@@ -29,6 +29,24 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 
 func SearchCategories(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
+
+	result, err := core.Context().ListCategories(page, size)
+
+	if err != nil {
+		log.Println("Search Categories Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(result))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func SearchHashCategories(w http.ResponseWriter, r *http.Request) {
+	page, size := drx.GetPageData(r)
 	hsh, err := base64.URLEncoding.DecodeString(drx.FindParam(r, "hash"))
 
 	if err != nil {

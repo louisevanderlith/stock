@@ -23,6 +23,7 @@ type StockContext interface {
 	GetProduct(productKey hsk.Key) (hsk.Record, error)
 	CreateProduct(obj Product) (hsk.Key, error)
 	UpdateProduct(prodKey hsk.Key, obj Product) error
+	ListProducts(page, size int) (records.Page, error)
 	SearchProducts(page, size int, in Product) (records.Page, error)
 
 	//Search
@@ -36,6 +37,10 @@ type StockContext interface {
 type context struct {
 	Categories husk.Table
 	Products   husk.Table
+}
+
+func (c context) ListProducts(page, size int) (records.Page, error) {
+	return c.Products.Find(page, size, op.Everything())
 }
 
 func (c context) SearchCategories(page, size int, in Category) (records.Page, error) {

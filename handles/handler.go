@@ -19,7 +19,7 @@ func SetupRoutes(issuer, audience string) http.Handler {
 
 	r.HandleFunc("/info", GetCategories).Methods(http.MethodGet)
 	r.HandleFunc("/info/{pagesize:[A-Z][0-9]+}", SearchCategories).Methods(http.MethodGet)
-	r.HandleFunc("/info/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", SearchCategories).Methods(http.MethodGet)
+	r.HandleFunc("/info/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", SearchHashCategories).Methods(http.MethodGet)
 	r.HandleFunc("/info/{key:[0-9]+\\x60[0-9]+}", ViewCategory).Methods(http.MethodGet)
 	r.HandleFunc("/info", CreateCategory).Methods(http.MethodPost)
 	r.HandleFunc("/info/{key:[0-9]+\\x60[0-9]+}", UpdateCategory).Methods(http.MethodPut)
@@ -34,6 +34,8 @@ func SetupRoutes(issuer, audience string) http.Handler {
 
 	//products
 	r.HandleFunc("/products/{key:[0-9]+\\x60[0-9]+}", ViewProduct).Methods(http.MethodGet)
+	r.HandleFunc("/products/{pagesize:[A-Z][0-9]+}", SearchProducts).Methods(http.MethodGet)
+	r.HandleFunc("/products/{pagesize:[A-Z][0-9]+}/{hash:[a-zA-Z0-9]+={0,2}}", SearchHashProducts).Methods(http.MethodGet)
 	r.HandleFunc("/products", CreateProduct).Methods(http.MethodPost)
 	r.HandleFunc("/products/{key:[0-9]+\\x60[0-9]+}", UpdateProduct).Methods(http.MethodPut)
 	r.HandleFunc("/products/item/{itemKey:[0-9]+\\x60[0-9]+}/{pagesize:[A-Z][0-9]+}", SearchItemProducts).Methods(http.MethodGet)

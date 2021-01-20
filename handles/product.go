@@ -37,6 +37,24 @@ func ViewProduct(w http.ResponseWriter, r *http.Request) {
 
 func SearchProducts(w http.ResponseWriter, r *http.Request) {
 	page, size := drx.GetPageData(r)
+
+	result, err := core.Context().ListProducts(page, size)
+
+	if err != nil {
+		log.Println("Search Products Error", err)
+		http.Error(w, "", http.StatusNotFound)
+		return
+	}
+
+	err = mix.Write(w, mix.JSON(result))
+
+	if err != nil {
+		log.Println("Serve Error", err)
+	}
+}
+
+func SearchHashProducts(w http.ResponseWriter, r *http.Request) {
+	page, size := drx.GetPageData(r)
 	hsh, err := base64.URLEncoding.DecodeString(drx.FindParam(r, "hash"))
 
 	if err != nil {
@@ -45,7 +63,7 @@ func SearchProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in := core.Product{}
+	in := core.Product{CategoryKey: keys.CrazyKey(), ImageKey: keys.CrazyKey()}
 	err = json.Unmarshal(hsh, &in)
 
 	if err != nil {
@@ -70,8 +88,7 @@ func SearchProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
-	obj := core.Product{}
-
+	obj := core.Product{CategoryKey: keys.CrazyKey(), ImageKey: keys.CrazyKey()}
 	err := drx.JSONBody(r, &obj)
 
 	if err != nil {
@@ -104,7 +121,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	obj := core.Product{}
+	obj := core.Product{CategoryKey: keys.CrazyKey(), ImageKey: keys.CrazyKey()}
 	err = drx.JSONBody(r, &obj)
 
 	if err != nil {
